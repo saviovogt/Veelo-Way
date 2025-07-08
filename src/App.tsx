@@ -7,6 +7,9 @@ import { AppProvider } from "@/contexts/AppContext";
 import Layout from "@/components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Clientes from "./pages/Clientes";
+import Patinetes from "./pages/Patinetes";
+import Contratos from "./pages/Contratos";
+import FluxoCaixaPage from "./pages/FluxoCaixa";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -19,13 +22,12 @@ const App = () => (
       <AppProvider>
         <BrowserRouter>
           <Layout>
-            
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/clientes" element={<Clientes />} />
-              <Route path="/patinetes" element={<div>Patinetes - Em desenvolvimento</div>} />
-              <Route path="/contratos" element={<div>Contratos - Em desenvolvimento</div>} />
-              <Route path="/fluxo-caixa" element={<div>Fluxo de Caixa - Em desenvolvimento</div>} />
+              <Route path="/patinetes" element={<Patinetes />} />
+              <Route path="/contratos" element={<Contratos />} />
+              <Route path="/fluxo-caixa" element={<FluxoCaixaPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>
