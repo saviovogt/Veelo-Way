@@ -9,6 +9,7 @@ import {
   PlayCircle,
   Clock,
   CheckCircle,
+  BarChart3,
   Menu,
   X
 } from 'lucide-react';
@@ -32,6 +33,7 @@ const Layout = ({ children }: LayoutProps) => {
     { path: '/patinetes', icon: Zap, label: 'Patinetes' },
     { path: '/contratos', icon: FileText, label: 'Contratos' },
     { path: '/fluxo-caixa', icon: DollarSign, label: 'Fluxo de Caixa' },
+    { path: '/relatorios', icon: BarChart3, label: 'Relatórios' },
   ];
 
   const NavItems = () => (
