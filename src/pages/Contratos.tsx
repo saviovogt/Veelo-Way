@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, Search, Edit, Trash2, Play, Square, Clock } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Play, Square, Clock, CheckCircle, X, FileText } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { Contrato, FluxoCaixa } from '@/types';
 import { showSuccess, showError } from '@/utils/toast';
@@ -21,7 +21,7 @@ const Contratos = () => {
   const [formData, setFormData] = useState({
     clienteId: '',
     patineteId: '',
-    minutosUsados: 0,
+    tempoEstimado: 30,
     observacoes: ''
   });
 
@@ -37,7 +37,6 @@ const Contratos = () => {
   });
 
   const clientesAtivos = clientes.filter(c => c.status === 'ativo');
-  // Patinetes disponíveis para nova locação (disponível ou devolvido)
   const patinetesDisponiveis = patinetes.filter(p => 
     p.status === 'disponivel' || p.status === 'devolvido'
   );
@@ -46,7 +45,7 @@ const Contratos = () => {
     setFormData({
       clienteId: '',
       patineteId: '',
-      minutosUsados: 0,
+      tempoEstimado: 30,
       observacoes: ''
     });
     setEditingContrato(null);
@@ -68,21 +67,21 @@ const Contratos = () => {
 
     if (editingContrato) {
       // Editar contrato existente
-      const valorTotal = formData.minutosUsados * patinete.valorPorMinuto;
-      
       setContratos(prev => prev.map(contrato => 
         contrato.id === editingContrato.id 
           ? { 
               ...contrato, 
-              minutosUsados: formData.minutosUsados,
-              valorTotal,
+              clienteId: formData.clienteId,
+              patineteId: formData.patineteId,
+              tempoEstimado: formData.tempoEstimado,
+              valorEstimado: formData.tempoEstimado * patinete.valorPorMinuto,
               observacoes: formData.observacoes
             }
           : contrato
       ));
       showSuccess('Contrato atualizado com sucesso!');
     } else {
-      // Criar novo contrato (iniciar locação)
+      // Criar novo contrato (status pendente)
       const novoContrato: Contrato = {
         id: Date.now().toString(),
         clienteId: formData.clienteId,
@@ -90,24 +89,72 @@ const Contratos = () => {
         dataInicio: new Date().toISOString(),
         minutosUsados: 0,
         valorTotal: 0,
-        status: 'ativo',
-        observacoes: formData.observacoes
+        status: 'pendente',
+        observacoes: formData.observacoes,
+        tempoEstimado: formData.tempoEstimado,
+        valorEstimado: formData.tempoEstimado * patinete.valorPorMinuto
       };
 
       setContratos(prev => [...prev, novoContrato]);
-      
-      // Atualizar status do patinete para em andamento
-      setPatinetes(prev => prev.map(p => 
-        p.id === formData.patineteId 
-          ? { ...p, status: 'em_andamento' as const }
-          : p
-      ));
-      
-      showSuccess('Locação iniciada com sucesso!');
+      showSuccess('Contrato criado! Aguardando aceitação do cliente.');
     }
 
     resetForm();
     setIsDialogOpen(false);
+  };
+
+  const handleAceitarContrato = (contrato: Contrato) => {
+    if (!confirm('Confirmar aceitação do contrato pelo cliente?')) return;
+
+    // Aceitar contrato
+    setContratos(prev => prev.map(c => 
+      c.id === contrato.id 
+        ? { 
+            ...c, 
+            status: 'aceito' as const,
+            dataAceitacao: new Date().toISOString()
+          }
+        : c
+    ));
+
+    showSuccess('Contrato aceito pelo cliente!');
+  };
+
+  const handleRejeitarContrato = (contrato: Contrato) => {
+    if (!confirm('Confirmar rejeição do contrato pelo cliente?')) return;
+
+    // Rejeitar contrato
+    setContratos(prev => prev.map(c => 
+      c.id === contrato.id 
+        ? { ...c, status: 'rejeitado' as const }
+        : c
+    ));
+
+    showSuccess('Contrato rejeitado pelo cliente.');
+  };
+
+  const handleIniciarLocacao = (contrato: Contrato) => {
+    if (!confirm('Iniciar locação agora?')) return;
+
+    // Iniciar locação
+    setContratos(prev => prev.map(c => 
+      c.id === contrato.id 
+        ? { 
+            ...c, 
+            status: 'ativo' as const,
+            dataInicio: new Date().toISOString()
+          }
+        : c
+    ));
+
+    // Atualizar status do patinete para em andamento
+    setPatinetes(prev => prev.map(p => 
+      p.id === contrato.patineteId 
+        ? { ...p, status: 'em_andamento' as const }
+        : p
+    ));
+
+    showSuccess('Locação iniciada com sucesso!');
   };
 
   const handleFinalizarContrato = (contrato: Contrato) => {
@@ -156,7 +203,7 @@ const Contratos = () => {
   };
 
   const handleCancelarContrato = (contrato: Contrato) => {
-    if (!confirm('Tem certeza que deseja cancelar esta locação?')) return;
+    if (!confirm('Tem certeza que deseja cancelar este contrato?')) return;
 
     // Cancelar contrato
     setContratos(prev => prev.map(c => 
@@ -165,14 +212,16 @@ const Contratos = () => {
         : c
     ));
 
-    // Liberar patinete (volta para disponível)
-    setPatinetes(prev => prev.map(p => 
-      p.id === contrato.patineteId 
-        ? { ...p, status: 'disponivel' as const }
-        : p
-    ));
+    // Liberar patinete se estava em uso
+    if (contrato.status === 'ativo') {
+      setPatinetes(prev => prev.map(p => 
+        p.id === contrato.patineteId 
+          ? { ...p, status: 'disponivel' as const }
+          : p
+      ));
+    }
 
-    showSuccess('Locação cancelada com sucesso!');
+    showSuccess('Contrato cancelado com sucesso!');
   };
 
   const handleEdit = (contrato: Contrato) => {
@@ -180,7 +229,7 @@ const Contratos = () => {
     setFormData({
       clienteId: contrato.clienteId,
       patineteId: contrato.patineteId,
-      minutosUsados: contrato.minutosUsados,
+      tempoEstimado: contrato.tempoEstimado || 30,
       observacoes: contrato.observacoes || ''
     });
     setIsDialogOpen(true);
@@ -195,10 +244,25 @@ const Contratos = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
+      case 'pendente': return 'secondary';
+      case 'aceito': return 'default';
       case 'ativo': return 'default';
       case 'finalizado': return 'secondary';
       case 'cancelado': return 'destructive';
+      case 'rejeitado': return 'destructive';
       default: return 'default';
+    }
+  };
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'pendente': return 'Pendente';
+      case 'aceito': return 'Aceito';
+      case 'ativo': return 'Ativo';
+      case 'finalizado': return 'Finalizado';
+      case 'cancelado': return 'Cancelado';
+      case 'rejeitado': return 'Rejeitado';
+      default: return status;
     }
   };
 
@@ -208,20 +272,20 @@ const Contratos = () => {
         <div>
           <h1 className="text-3xl font-bold">Contratos</h1>
           <p className="text-muted-foreground">
-            Gerencie as locações de patinetes
+            Gerencie contratos de locação com sistema de aceitação
           </p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button onClick={resetForm}>
               <Plus className="mr-2 h-4 w-4" />
-              Nova Locação
+              Novo Contrato
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>
-                {editingContrato ? 'Editar Contrato' : 'Nova Locação'}
+                {editingContrato ? 'Editar Contrato' : 'Novo Contrato'}
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -256,27 +320,22 @@ const Contratos = () => {
                       {patinetesDisponiveis.map(patinete => (
                         <SelectItem key={patinete.id} value={patinete.id}>
                           {patinete.marca} {patinete.modelo} - R$ {patinete.valorPorMinuto.toFixed(2)}/min
-                          <span className="text-xs text-muted-foreground ml-2">
-                            ({patinete.status === 'disponivel' ? 'Disponível' : 'Devolvido'})
-                          </span>
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
 
-                {editingContrato && (
-                  <div>
-                    <Label htmlFor="minutosUsados">Minutos Utilizados</Label>
-                    <Input
-                      id="minutosUsados"
-                      type="number"
-                      min="0"
-                      value={formData.minutosUsados}
-                      onChange={(e) => setFormData(prev => ({ ...prev, minutosUsados: parseInt(e.target.value) || 0 }))}
-                    />
-                  </div>
-                )}
+                <div>
+                  <Label htmlFor="tempoEstimado">Tempo Estimado (minutos)</Label>
+                  <Input
+                    id="tempoEstimado"
+                    type="number"
+                    min="1"
+                    value={formData.tempoEstimado}
+                    onChange={(e) => setFormData(prev => ({ ...prev, tempoEstimado: parseInt(e.target.value) || 30 }))}
+                  />
+                </div>
 
                 <div>
                   <Label htmlFor="observacoes">Observações</Label>
@@ -284,16 +343,25 @@ const Contratos = () => {
                     id="observacoes"
                     value={formData.observacoes}
                     onChange={(e) => setFormData(prev => ({ ...prev, observacoes: e.target.value }))}
-                    placeholder="Observações sobre a locação..."
+                    placeholder="Termos e condições do contrato..."
                   />
                 </div>
+
+                {formData.patineteId && formData.tempoEstimado > 0 && (
+                  <div className="bg-muted p-3 rounded-lg">
+                    <p className="text-sm font-medium">Valor Estimado:</p>
+                    <p className="text-lg font-bold text-green-600">
+                      R$ {(formData.tempoEstimado * (patinetes.find(p => p.id === formData.patineteId)?.valorPorMinuto || 0)).toFixed(2)}
+                    </p>
+                  </div>
+                )}
               </div>
               <div className="flex justify-end space-x-2">
                 <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                   Cancelar
                 </Button>
                 <Button type="submit">
-                  {editingContrato ? 'Atualizar' : 'Iniciar Locação'}
+                  {editingContrato ? 'Atualizar' : 'Criar Contrato'}
                 </Button>
               </div>
             </form>
@@ -310,7 +378,6 @@ const Contratos = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="max-w-sm"
         />
-      
       </div>
 
       {/* Lista de Contratos */}
@@ -332,29 +399,29 @@ const Contratos = () => {
                     </p>
                   </div>
                   <Badge variant={getStatusColor(contrato.status)}>
-                    {contrato.status}
+                    {getStatusLabel(contrato.status)}
                   </Badge>
                 </div>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p className="text-muted-foreground">Início</p>
+                    <p className="text-muted-foreground">Criado em</p>
                     <p>{format(new Date(contrato.dataInicio), 'dd/MM/yyyy HH:mm')}</p>
                   </div>
-                  {contrato.dataFim && (
+                  {contrato.dataAceitacao && (
                     <div>
-                      <p className="text-muted-foreground">Fim</p>
-                      <p>{format(new Date(contrato.dataFim), 'dd/MM/yyyy HH:mm')}</p>
+                      <p className="text-muted-foreground">Aceito em</p>
+                      <p>{format(new Date(contrato.dataAceitacao), 'dd/MM/yyyy HH:mm')}</p>
                     </div>
                   )}
                   <div>
-                    <p className="text-muted-foreground">Minutos</p>
-                    <p>{contrato.minutosUsados} min</p>
+                    <p className="text-muted-foreground">Tempo Estimado</p>
+                    <p>{contrato.tempoEstimado || 0} min</p>
                   </div>
                   <div>
-                    <p className="text-muted-foreground">Valor Total</p>
-                    <p className="font-medium">R$ {contrato.valorTotal.toFixed(2)}</p>
+                    <p className="text-muted-foreground">Valor Estimado</p>
+                    <p className="font-medium">R$ {(contrato.valorEstimado || 0).toFixed(2)}</p>
                   </div>
                 </div>
 
@@ -366,25 +433,63 @@ const Contratos = () => {
                 )}
 
                 <div className="flex justify-end space-x-2 pt-2">
-                  {contrato.status === 'ativo' && (
+                  {contrato.status === 'pendente' && (
                     <>
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleFinalizarContrato(contrato)}
+                        onClick={() => handleAceitarContrato(contrato)}
+                        className="text-green-600 hover:text-green-700"
                       >
-                        <Square className="h-4 w-4 mr-1" />
-                        Finalizar
+                        <CheckCircle className="h-4 w-4 mr-1" />
+                        Aceitar
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleCancelarContrato(contrato)}
+                        onClick={() => handleRejeitarContrato(contrato)}
+                        className="text-red-600 hover:text-red-700"
                       >
-                        Cancelar
+                        <X className="h-4 w-4 mr-1" />
+                        Rejeitar
                       </Button>
                     </>
                   )}
+                  
+                  {contrato.status === 'aceito' && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleIniciarLocacao(contrato)}
+                      className="text-blue-600 hover:text-blue-700"
+                    >
+                      <Play className="h-4 w-4 mr-1" />
+                      Iniciar Locação
+                    </Button>
+                  )}
+
+                  {contrato.status === 'ativo' && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleFinalizarContrato(contrato)}
+                      className="text-green-600 hover:text-green-700"
+                    >
+                      <Square className="h-4 w-4 mr-1" />
+                      Finalizar
+                    </Button>
+                  )}
+
+                  {(contrato.status === 'pendente' || contrato.status === 'aceito' || contrato.status === 'ativo') && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleCancelarContrato(contrato)}
+                    >
+                      Cancelar
+                    </Button>
+                  )}
+
                   <Button
                     variant="outline"
                     size="sm"
@@ -392,6 +497,7 @@ const Contratos = () => {
                   >
                     <Edit className="h-4 w-4" />
                   </Button>
+                  
                   <Button
                     variant="outline"
                     size="sm"
@@ -409,6 +515,7 @@ const Contratos = () => {
       {filteredContratos.length === 0 && (
         <Card>
           <CardContent className="text-center py-8">
+            <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <p className="text-muted-foreground">
               {searchTerm ? 'Nenhum contrato encontrado' : 'Nenhum contrato cadastrado ainda'}
             </p>

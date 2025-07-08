@@ -29,8 +29,11 @@ export interface Contrato {
   dataFim?: string;
   minutosUsados: number;
   valorTotal: number;
-  status: 'ativo' | 'finalizado' | 'cancelado';
+  status: 'pendente' | 'aceito' | 'ativo' | 'finalizado' | 'cancelado' | 'rejeitado';
   observacoes?: string;
+  dataAceitacao?: string;
+  valorEstimado?: number;
+  tempoEstimado?: number;
 }
 
 export interface FluxoCaixa {
