@@ -6,6 +6,7 @@ import {
   Zap, 
   FileText, 
   DollarSign,
+  PlayCircle,
   Menu,
   X
 } from 'lucide-react';
@@ -22,6 +23,7 @@ const Layout = ({ children }: LayoutProps) => {
 
   const menuItems = [
     { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
+    { path: '/locacao', icon: PlayCircle, label: 'Nova Locação' },
     { path: '/clientes', icon: Users, label: 'Clientes' },
     { path: '/patinetes', icon: Zap, label: 'Patinetes' },
     { path: '/contratos', icon: FileText, label: 'Contratos' },
