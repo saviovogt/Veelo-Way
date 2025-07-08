@@ -24,7 +24,7 @@ export interface Patinete {
 export interface Contrato {
   id: string;
   clienteId: string;
-  patineteId: string;
+  patineteId: string; // Pode ficar vazio para contratos de termos
   dataInicio: string;
   dataFim?: string;
   minutosUsados: number;

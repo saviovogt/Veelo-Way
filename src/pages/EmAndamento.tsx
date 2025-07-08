@@ -13,8 +13,10 @@ const EmAndamento = () => {
   const { contratos, setContratos, clientes, patinetes, setPatinetes, setFluxoCaixa } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Filtrar apenas contratos ativos (em andamento)
-  const contratosAtivos = contratos.filter(contrato => contrato.status === 'ativo');
+  // Filtrar apenas contratos ativos (locações em andamento)
+  const contratosAtivos = contratos.filter(contrato => 
+    contrato.status === 'ativo' && contrato.patineteId // Apenas locações reais
+  );
 
   const filteredContratos = contratosAtivos.filter(contrato => {
     const cliente = clientes.find(c => c.id === contrato.clienteId);

@@ -8,42 +8,38 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Clock, DollarSign, User, Zap, Calculator, CheckCircle } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
-import { FluxoCaixa } from '@/types';
+import { Contrato } from '@/types';
 import { showSuccess, showError } from '@/utils/toast';
 
 const Locacao = () => {
-  const { clientes, patinetes, setFluxoCaixa, setPatinetes } = useApp();
+  const { clientes, patinetes, setPatinetes, setContratos } = useApp();
   const [formData, setFormData] = useState({
     clienteId: '',
     patineteId: '',
-    minutos: 0
+    observacoes: ''
   });
 
   const clientesAtivos = clientes.filter(c => c.status === 'ativo');
-  // Incluir patinetes disponíveis e devolvidos para locação rápida
+  // Incluir patinetes disponíveis e devolvidos para locação
   const patinetesDisponiveis = patinetes.filter(p => 
     p.status === 'disponivel' || p.status === 'devolvido'
   );
 
   const clienteSelecionado = clientes.find(c => c.id === formData.clienteId);
   const patineteSelecionado = patinetes.find(p => p.id === formData.patineteId);
-  
-  const valorTotal = patineteSelecionado && formData.minutos > 0 
-    ? patineteSelecionado.valorPorMinuto * formData.minutos 
-    : 0;
 
   const resetForm = () => {
     setFormData({
       clienteId: '',
       patineteId: '',
-      minutos: 0
+      observacoes: ''
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.Form Event) => {
     e.preventDefault();
     
-    if (!formData.clienteId || !formData.patineteId || formData.minutos <= 0) {
+    if (!formData.clienteId || !formData.patineteId) {
       showError('Preencha todos os campos obrigatórios');
       return;
     }
@@ -53,26 +49,28 @@ const Locacao = () => {
       return;
     }
 
-    // Registrar no fluxo de caixa
-    const novaEntrada: FluxoCaixa = {
+    // Criar registro de locação ativa
+    const novaLocacao: Contrato = {
       id: Date.now().toString(),
-      tipo: 'entrada',
-      valor: valorTotal,
-      descricao: `Locação - ${clienteSelecionado.nome} - ${patineteSelecionado.marca} ${patineteSelecionado.modelo} - ${formData.minutos} min`,
-      categoria: 'Locação',
-      data: new Date().toISOString().split('T')[0]
+      clienteId: formData.clienteId,
+      patineteId: formData.patineteId,
+      dataInicio: new Date().toISOString(),
+      minutosUsados: 0,
+      valorTotal: 0,
+      status: 'ativo', // Locação ativa
+      observacoes: formData.observacoes
     };
 
-    setFluxoCaixa(prev => [...prev, novaEntrada]);
+    setContratos(prev => [...prev, novaLocacao]);
     
-    // Marcar patinete como alugado após locação rápida
+    // Marcar patinete como em andamento
     setPatinetes(prev => prev.map(p => 
       p.id === formData.patineteId 
-        ? { ...p, status: 'alugado' as const }
+        ? { ...p, status: 'em_andamento' as const }
         : p
     ));
     
-    showSuccess(`Locação registrada! Valor: R$ ${valorTotal.toFixed(2)}`);
+    showSuccess(`Locação iniciada! Cliente: ${clienteSelecionado.nome}`);
     resetForm();
   };
 
@@ -89,7 +87,7 @@ const Locacao = () => {
       <div>
         <h1 className="text-3xl font-bold">Nova Locação</h1>
         <p className="text-muted-foreground">
-          Registre uma locação rápida de patinete
+          Inicie uma nova locação de patinete
         </p>
       </div>
 
@@ -159,24 +157,22 @@ const Locacao = () => {
               </div>
 
               <div>
-                <Label htmlFor="minutos">Minutos de Uso *</Label>
+                <Label htmlFor="observacoes">Observações</Label>
                 <Input
-                  id="minutos"
-                  type="number"
-                  min="1"
-                  value={formData.minutos || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, minutos: parseInt(e.target.value) || 0 }))}
-                  placeholder="Ex: 30"
+                  id="observacoes"
+                  value={formData.observacoes}
+                  onChange={(e) => setFormData(prev => ({ ...prev, observacoes: e.target.value }))}
+                  placeholder="Observações sobre a locação..."
                 />
               </div>
 
               <Button 
                 type="submit" 
                 className="w-full" 
-                disabled={!formData.clienteId || !formData.patineteId || formData.minutos <= 0}
+                disabled={!formData.clienteId || !formData.patineteId}
               >
                 <CheckCircle className="mr-2 h-4 w-4" />
-                Registrar Locação
+                Iniciar Locação
               </Button>
             </form>
           </CardContent>
@@ -241,37 +237,26 @@ const Locacao = () => {
 
             <Separator />
 
-            {/* Cálculo do Valor */}
+            {/* Informações da Locação */}
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <Clock className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Tempo e Valor</span>
+                <span className="text-sm font-medium">Locação</span>
               </div>
               <div className="ml-6 space-y-1">
                 <p className="text-sm">
-                  <span className="text-muted-foreground">Minutos:</span> {formData.minutos || 0}
+                  <span className="text-muted-foreground">Tipo:</span> Locação por tempo
                 </p>
-                {patineteSelecionado && (
-                  <p className="text-sm">
-                    <span className="text-muted-foreground">Valor/min:</span> R$ {patineteSelecionado.valorPorMinuto.toFixed(2)}
+                <p className="text-sm">
+                  <span className="text-muted-foreground">Cobrança:</span> Por minuto de uso
+                </p>
+                <div className="bg-blue-50 p-3 rounded-lg mt-2">
+                  <p className="text-xs text-blue-700">
+                    💡 O valor será calculado no final da locação baseado no tempo de uso
                   </p>
-                )}
-                <div className="flex items-center space-x-2 pt-2">
-                  <DollarSign className="h-4 w-4 text-green-600" />
-                  <span className="text-lg font-bold text-green-600">
-                    Total: R$ {valorTotal.toFixed(2)}
-                  </span>
                 </div>
               </div>
             </div>
-
-            {formData.minutos > 0 && patineteSelecionado && (
-              <div className="bg-muted p-3 rounded-lg">
-                <p className="text-xs text-muted-foreground">
-                  Cálculo: {formData.minutos} min × R$ {patineteSelecionado.valorPorMinuto.toFixed(2)} = R$ {valorTotal.toFixed(2)}
-                </p>
-              </div>
-            )}
           </CardContent>
         </Card>
       </div>
