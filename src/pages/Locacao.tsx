@@ -36,7 +36,7 @@ const Locacao = () => {
     });
   };
 
-  const handleSubmit = (e: React.Form Event) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.clienteId || !formData.patineteId) {
