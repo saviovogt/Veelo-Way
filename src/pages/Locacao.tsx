@@ -12,7 +12,7 @@ import { FluxoCaixa } from '@/types';
 import { showSuccess, showError } from '@/utils/toast';
 
 const Locacao = () => {
-  const { clientes, patinetes, setFluxoCaixa } = useApp();
+  const { clientes, patinetes, setFluxoCaixa, setPatinetes } = useApp();
   const [formData, setFormData] = useState({
     clienteId: '',
     patineteId: '',
@@ -20,7 +20,10 @@ const Locacao = () => {
   });
 
   const clientesAtivos = clientes.filter(c => c.status === 'ativo');
-  const patinetesDisponiveis = patinetes.filter(p => p.status === 'disponivel');
+  // Incluir patinetes disponíveis e devolvidos para locação rápida
+  const patinetesDisponiveis = patinetes.filter(p => 
+    p.status === 'disponivel' || p.status === 'devolvido'
+  );
 
   const clienteSelecionado = clientes.find(c => c.id === formData.clienteId);
   const patineteSelecionado = patinetes.find(p => p.id === formData.patineteId);
@@ -62,8 +65,23 @@ const Locacao = () => {
 
     setFluxoCaixa(prev => [...prev, novaEntrada]);
     
+    // Marcar patinete como alugado após locação rápida
+    setPatinetes(prev => prev.map(p => 
+      p.id === formData.patineteId 
+        ? { ...p, status: 'alugado' as const }
+        : p
+    ));
+    
     showSuccess(`Locação registrada! Valor: R$ ${valorTotal.toFixed(2)}`);
     resetForm();
+  };
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'disponivel': return 'Disponível';
+      case 'devolvido': return 'Devolvido';
+      default: return status;
+    }
   };
 
   return (
@@ -126,7 +144,7 @@ const Locacao = () => {
                         <div className="flex flex-col">
                           <span>{patinete.marca} {patinete.modelo}</span>
                           <span className="text-xs text-muted-foreground">
-                            R$ {patinete.valorPorMinuto.toFixed(2)}/min • {patinete.bateria}% bateria
+                            R$ {patinete.valorPorMinuto.toFixed(2)}/min • {patinete.bateria}% bateria • {getStatusLabel(patinete.status)}
                           </span>
                         </div>
                       </SelectItem>
@@ -210,6 +228,9 @@ const Locacao = () => {
                     </Badge>
                     <Badge variant="outline">
                       {patineteSelecionado.bateria}% bateria
+                    </Badge>
+                    <Badge variant="outline">
+                      {getStatusLabel(patineteSelecionado.status)}
                     </Badge>
                   </div>
                 </div>

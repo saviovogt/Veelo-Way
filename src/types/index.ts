@@ -14,7 +14,7 @@ export interface Patinete {
   modelo: string;
   marca: string;
   numeroSerie: string;
-  status: 'disponivel' | 'alugado' | 'manutencao';
+  status: 'disponivel' | 'alugado' | 'manutencao' | 'em_andamento' | 'devolvido';
   bateria: number;
   localizacao: string;
   valorPorMinuto: number;

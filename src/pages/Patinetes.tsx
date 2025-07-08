@@ -21,7 +21,7 @@ const Patinetes = () => {
     modelo: '',
     marca: '',
     numeroSerie: '',
-    status: 'disponivel' as 'disponivel' | 'alugado' | 'manutencao',
+    status: 'disponivel' as 'disponivel' | 'alugado' | 'manutencao' | 'em_andamento' | 'devolvido',
     bateria: 100,
     localizacao: '',
     valorPorMinuto: 0.50
@@ -104,7 +104,20 @@ const Patinetes = () => {
       case 'disponivel': return 'default';
       case 'alugado': return 'destructive';
       case 'manutencao': return 'secondary';
+      case 'em_andamento': return 'outline';
+      case 'devolvido': return 'secondary';
       default: return 'default';
+    }
+  };
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'disponivel': return 'Disponível';
+      case 'alugado': return 'Alugado';
+      case 'manutencao': return 'Manutenção';
+      case 'em_andamento': return 'Em Andamento';
+      case 'devolvido': return 'Devolvido';
+      default: return status;
     }
   };
 
@@ -165,9 +178,9 @@ const Patinetes = () => {
                     placeholder="Ex: XM001234"
                   />
                 </div>
-                <div>
+                <div className="col-span-2">
                   <Label htmlFor="status">Status</Label>
-                  <Select value={formData.status} onValueChange={(value: 'disponivel' | 'alugado' | 'manutencao') => 
+                  <Select value={formData.status} onValueChange={(value: 'disponivel' | 'alugado' | 'manutencao' | 'em_andamento' | 'devolvido') => 
                     setFormData(prev => ({ ...prev, status: value }))
                   }>
                     <SelectTrigger>
@@ -176,6 +189,8 @@ const Patinetes = () => {
                     <SelectContent>
                       <SelectItem value="disponivel">Disponível</SelectItem>
                       <SelectItem value="alugado">Alugado</SelectItem>
+                      <SelectItem value="em_andamento">Em Andamento</SelectItem>
+                      <SelectItem value="devolvido">Devolvido</SelectItem>
                       <SelectItem value="manutencao">Manutenção</SelectItem>
                     </SelectContent>
                   </Select>
@@ -191,16 +206,7 @@ const Patinetes = () => {
                     onChange={(e) => setFormData(prev => ({ ...prev, bateria: parseInt(e.target.value) || 0 }))}
                   />
                 </div>
-                <div className="col-span-2">
-                  <Label htmlFor="localizacao">Localização</Label>
-                  <Input
-                    id="localizacao"
-                    value={formData.localizacao}
-                    onChange={(e) => setFormData(prev => ({ ...prev, localizacao: e.target.value }))}
-                    placeholder="Ex: Praça da Sé, Centro"
-                  />
-                </div>
-                <div className="col-span-2">
+                <div>
                   <Label htmlFor="valorPorMinuto">Valor por Minuto (R$)</Label>
                   <Input
                     id="valorPorMinuto"
@@ -209,6 +215,15 @@ const Patinetes = () => {
                     min="0"
                     value={formData.valorPorMinuto}
                     onChange={(e) => setFormData(prev => ({ ...prev, valorPorMinuto: parseFloat(e.target.value) || 0 }))}
+                  />
+                </div>
+                <div className="col-span-2">
+                  <Label htmlFor="localizacao">Localização</Label>
+                  <Input
+                    id="localizacao"
+                    value={formData.localizacao}
+                    onChange={(e) => setFormData(prev => ({ ...prev, localizacao: e.target.value }))}
+                    placeholder="Ex: Praça da Sé, Centro"
                   />
                 </div>
               </div>
@@ -236,6 +251,23 @@ const Patinetes = () => {
         />
       </div>
 
+      {/* Estatísticas por Status */}
+      <div className="grid gap-4 md:grid-cols-5">
+        {['disponivel', 'alugado', 'em_andamento', 'devolvido', 'manutencao'].map(status => {
+          const count = patinetes.filter(p => p.status === status).length;
+          return (
+            <Card key={status}>
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <p className="text-2xl font-bold">{count}</p>
+                  <p className="text-sm text-muted-foreground">{getStatusLabel(status)}</p>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
       {/* Lista de Patinetes */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {filteredPatinetes.map((patinete) => (
@@ -247,7 +279,7 @@ const Patinetes = () => {
                   <p className="text-sm text-muted-foreground">{patinete.marca}</p>
                 </div>
                 <Badge variant={getStatusColor(patinete.status)}>
-                  {patinete.status}
+                  {getStatusLabel(patinete.status)}
                 </Badge>
               </div>
             </CardHeader>

@@ -37,7 +37,10 @@ const Contratos = () => {
   });
 
   const clientesAtivos = clientes.filter(c => c.status === 'ativo');
-  const patinetesDisponiveis = patinetes.filter(p => p.status === 'disponivel');
+  // Patinetes disponíveis para nova locação (disponível ou devolvido)
+  const patinetesDisponiveis = patinetes.filter(p => 
+    p.status === 'disponivel' || p.status === 'devolvido'
+  );
 
   const resetForm = () => {
     setFormData({
@@ -93,10 +96,10 @@ const Contratos = () => {
 
       setContratos(prev => [...prev, novoContrato]);
       
-      // Atualizar status do patinete para alugado
+      // Atualizar status do patinete para em andamento
       setPatinetes(prev => prev.map(p => 
         p.id === formData.patineteId 
-          ? { ...p, status: 'alugado' as const }
+          ? { ...p, status: 'em_andamento' as const }
           : p
       ));
       
@@ -130,10 +133,10 @@ const Contratos = () => {
         : c
     ));
 
-    // Liberar patinete
+    // Marcar patinete como devolvido
     setPatinetes(prev => prev.map(p => 
       p.id === contrato.patineteId 
-        ? { ...p, status: 'disponivel' as const }
+        ? { ...p, status: 'devolvido' as const }
         : p
     ));
 
@@ -162,7 +165,7 @@ const Contratos = () => {
         : c
     ));
 
-    // Liberar patinete
+    // Liberar patinete (volta para disponível)
     setPatinetes(prev => prev.map(p => 
       p.id === contrato.patineteId 
         ? { ...p, status: 'disponivel' as const }
@@ -253,6 +256,9 @@ const Contratos = () => {
                       {patinetesDisponiveis.map(patinete => (
                         <SelectItem key={patinete.id} value={patinete.id}>
                           {patinete.marca} {patinete.modelo} - R$ {patinete.valorPorMinuto.toFixed(2)}/min
+                          <span className="text-xs text-muted-foreground ml-2">
+                            ({patinete.status === 'disponivel' ? 'Disponível' : 'Devolvido'})
+                          </span>
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -304,6 +310,7 @@ const Contratos = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="max-w-sm"
         />
+      
       </div>
 
       {/* Lista de Contratos */}
@@ -403,7 +410,7 @@ const Contratos = () => {
         <Card>
           <CardContent className="text-center py-8">
             <p className="text-muted-foreground">
-              {searchTerm ? 'Nenhum contrato encontrado' :   'Nenhum contrato cadastrado ainda'}
+              {searchTerm ? 'Nenhum contrato encontrado' : 'Nenhum contrato cadastrado ainda'}
             </p>
           </CardContent>
         </Card>
