@@ -7,6 +7,8 @@ import { AppProvider } from "@/contexts/AppContext";
 import Layout from "@/components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Locacao from "./pages/Locacao";
+import EmAndamento from "./pages/EmAndamento";
+import Finalizado from "./pages/Finalizado";
 import Clientes from "./pages/Clientes";
 import Patinetes from "./pages/Patinetes";
 import Contratos from "./pages/Contratos";
@@ -26,7 +28,10 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/locacao" element={<Locacao />} />
+              <Route path="/em-andamento" element={<EmAndamento />} />
+              <Route path="/finalizado" element={<Finalizado />} />
               <Route path="/clientes" element={<Clientes />} />
+              
               <Route path="/patinetes" element={<Patinetes />} />
               <Route path="/contratos" element={<Contratos />} />
               <Route path="/fluxo-caixa" element={<FluxoCaixaPage />} />

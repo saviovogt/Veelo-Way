@@ -7,6 +7,8 @@ import {
   FileText, 
   DollarSign,
   PlayCircle,
+  Clock,
+  CheckCircle,
   Menu,
   X
 } from 'lucide-react';
@@ -24,6 +26,8 @@ const Layout = ({ children }: LayoutProps) => {
   const menuItems = [
     { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
     { path: '/locacao', icon: PlayCircle, label: 'Nova Locação' },
+    { path: '/em-andamento', icon: Clock, label: 'Em Andamento' },
+    { path: '/finalizado', icon: CheckCircle, label: 'Finalizado' },
     { path: '/clientes', icon: Users, label: 'Clientes' },
     { path: '/patinetes', icon: Zap, label: 'Patinetes' },
     { path: '/contratos', icon: FileText, label: 'Contratos' },
