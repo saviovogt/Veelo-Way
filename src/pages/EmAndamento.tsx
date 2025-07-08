@@ -58,10 +58,10 @@ const EmAndamento = () => {
         : c
     ));
 
-    // Marcar patinete como devolvido
+    // Marcar patinete como disponível automaticamente
     setPatinetes(prev => prev.map(p => 
       p.id === contrato.patineteId 
-        ? { ...p, status: 'devolvido' as const }
+        ? { ...p, status: 'disponivel' as const }
         : p
     ));
 
@@ -77,7 +77,7 @@ const EmAndamento = () => {
     };
 
     setFluxoCaixa(prev => [...prev, novaEntrada]);
-    showSuccess(`Locação finalizada! Valor: R$ ${valorTotal.toFixed(2)}`);
+    showSuccess(`Locação finalizada! Valor: R$ ${valorTotal.toFixed(2)} - Patinete disponível novamente`);
   };
 
   const calcularTempoDecorrido = (dataInicio: string) => {
