@@ -1,6 +1,8 @@
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import { Cliente, Patinete, Contrato, FluxoCaixa } from '@/types';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { supabase } from '@/lib/supabaseClient';
+import { Session, User } from '@supabase/supabase-js';
 
 interface AppContextType {
   clientes: Cliente[];
@@ -11,6 +13,10 @@ interface AppContextType {
   setContratos: (contratos: Contrato[] | ((prev: Contrato[]) => Contrato[])) => void;
   fluxoCaixa: FluxoCaixa[];
   setFluxoCaixa: (fluxoCaixa: FluxoCaixa[] | ((prev: FluxoCaixa[]) => FluxoCaixa[])) => void;
+  session: Session | null;
+  user: User | null;
+  loading: boolean;
+  signOut: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -28,25 +34,58 @@ interface AppProviderProps {
 }
 
 export const AppProvider = ({ children }: AppProviderProps) => {
-  // Zerando todos os dados iniciais para começar limpo
   const [clientes, setClientes] = useLocalStorage<Cliente[]>('veeloway-clientes', []);
   const [patinetes, setPatinetes] = useLocalStorage<Patinete[]>('veeloway-patinetes', []);
   const [contratos, setContratos] = useLocalStorage<Contrato[]>('veeloway-contratos', []);
   const [fluxoCaixa, setFluxoCaixa] = useLocalStorage<FluxoCaixa[]>('veeloway-fluxo', []);
 
+  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    };
+
+    getSession();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
+  const signOut = async () => {
+    await supabase.auth.signOut();
+  };
+
+  const value = {
+    clientes,
+    setClientes,
+    patinetes,
+    setPatinetes,
+    contratos,
+    setContratos,
+    fluxoCaixa,
+    setFluxoCaixa,
+    session,
+    user,
+    loading,
+    signOut,
+  };
+
   return (
-    <AppContext.Provider
-      value={{
-        clientes,
-        setClientes,
-        patinetes,
-        setPatinetes,
-        contratos,
-        setContratos,
-        fluxoCaixa,
-        setFluxoCaixa,
-      }}
-    >
+    <AppContext.Provider value={value}>
       {children}
     </AppContext.Provider>
   );
