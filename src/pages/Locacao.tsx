@@ -168,7 +168,7 @@ const Locacao = () => {
 
               <Button 
                 type="submit" 
-                className="w-full" 
+                className="w-full bg-yellow-400 hover:bg-yellow-500 text-black" 
                 disabled={!formData.clienteId || !formData.patineteId}
               >
                 <CheckCircle className="mr-2 h-4 w-4" />
@@ -250,8 +250,8 @@ const Locacao = () => {
                 <p className="text-sm">
                   <span className="text-muted-foreground">Cobrança:</span> Por minuto de uso
                 </p>
-                <div className="bg-blue-50 p-3 rounded-lg mt-2">
-                  <p className="text-xs text-blue-700">
+                <div className="bg-yellow-50 p-3 rounded-lg mt-2">
+                  <p className="text-xs text-yellow-700">
                     💡 O valor será calculado no final da locação baseado no tempo de uso
                   </p>
                 </div>
@@ -269,7 +269,7 @@ const Locacao = () => {
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
             <div className="text-center">
-              <p className="text-2xl font-bold text-blue-600">{clientesAtivos.length}</p>
+              <p className="text-2xl font-bold text-yellow-600">{clientesAtivos.length}</p>
               <p className="text-sm text-muted-foreground">Clientes Ativos</p>
             </div>
             <div className="text-center">

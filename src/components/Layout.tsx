@@ -4,7 +4,6 @@ import {
   LayoutDashboard, 
   Users, 
   Zap, 
-  FileText, 
   DollarSign,
   PlayCircle,
   Clock,
@@ -31,7 +30,6 @@ const Layout = ({ children }: LayoutProps) => {
     { path: '/finalizado', icon: CheckCircle, label: 'Finalizado' },
     { path: '/clientes', icon: Users, label: 'Clientes' },
     { path: '/patinetes', icon: Zap, label: 'Patinetes' },
-    { path: '/contratos', icon: FileText, label: 'Contratos' },
     { path: '/fluxo-caixa', icon: DollarSign, label: 'Fluxo de Caixa' },
     { path: '/relatorios', icon: BarChart3, label: 'Relatórios' },
   ];

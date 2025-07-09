@@ -11,7 +11,6 @@ import EmAndamento from "./pages/EmAndamento";
 import Finalizado from "./pages/Finalizado";
 import Clientes from "./pages/Clientes";
 import Patinetes from "./pages/Patinetes";
-import Contratos from "./pages/Contratos";
 import FluxoCaixaPage from "./pages/FluxoCaixa";
 import Relatorios from "./pages/Relatorios";
 import NotFound from "./pages/NotFound";
@@ -33,7 +32,6 @@ const App = () => (
               <Route path="/finalizado" element={<Finalizado />} />
               <Route path="/clientes" element={<Clientes />} />
               <Route path="/patinetes" element={<Patinetes />} />
-              <Route path="/contratos" element={<Contratos />} />
               <Route path="/fluxo-caixa" element={<FluxoCaixaPage />} />
               <Route path="/relatorios" element={<Relatorios />} />
               <Route path="*" element={<NotFound />} />

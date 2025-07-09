@@ -28,10 +28,11 @@ interface AppProviderProps {
 }
 
 export const AppProvider = ({ children }: AppProviderProps) => {
-  const [clientes, setClientes] = useLocalStorage<Cliente[]>('scooter-clientes', []);
-  const [patinetes, setPatinetes] = useLocalStorage<Patinete[]>('scooter-patinetes', []);
-  const [contratos, setContratos] = useLocalStorage<Contrato[]>('scooter-contratos', []);
-  const [fluxoCaixa, setFluxoCaixa] = useLocalStorage<FluxoCaixa[]>('scooter-fluxo', []);
+  // Zerando todos os dados iniciais para começar limpo
+  const [clientes, setClientes] = useLocalStorage<Cliente[]>('veeloway-clientes', []);
+  const [patinetes, setPatinetes] = useLocalStorage<Patinete[]>('veeloway-patinetes', []);
+  const [contratos, setContratos] = useLocalStorage<Contrato[]>('veeloway-contratos', []);
+  const [fluxoCaixa, setFluxoCaixa] = useLocalStorage<FluxoCaixa[]>('veeloway-fluxo', []);
 
   return (
     <AppContext.Provider

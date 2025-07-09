@@ -29,11 +29,8 @@ export interface Contrato {
   dataFim?: string;
   minutosUsados: number;
   valorTotal: number;
-  status: 'pendente' | 'aceito' | 'ativo' | 'finalizado' | 'cancelado' | 'rejeitado';
+  status: 'ativo' | 'finalizado' | 'cancelado';
   observacoes?: string;
-  dataAceitacao?: string;
-  valorEstimado?: number;
-  tempoEstimado?: number;
   metodoPagamento?: 'dinheiro' | 'cartao_debito' | 'cartao_credito' | 'pix' | 'transferencia';
 }
 
