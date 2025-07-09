@@ -24,7 +24,7 @@ export interface Patinete {
 export interface Contrato {
   id: string;
   clienteId: string;
-  patineteId: string; // Pode ficar vazio para contratos de termos
+  patineteId: string;
   dataInicio: string;
   dataFim?: string;
   minutosUsados: number;
@@ -34,6 +34,7 @@ export interface Contrato {
   dataAceitacao?: string;
   valorEstimado?: number;
   tempoEstimado?: number;
+  metodoPagamento?: 'dinheiro' | 'cartao_debito' | 'cartao_credito' | 'pix' | 'transferencia';
 }
 
 export interface FluxoCaixa {
@@ -44,6 +45,7 @@ export interface FluxoCaixa {
   categoria: string;
   data: string;
   contratoId?: string;
+  metodoPagamento?: 'dinheiro' | 'cartao_debito' | 'cartao_credito' | 'pix' | 'transferencia';
 }
 
 export interface DashboardStats {

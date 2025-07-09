@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, CheckCircle, User, Zap, Clock, DollarSign, Calendar } from 'lucide-react';
+import { Search, CheckCircle, User, Zap, Clock, DollarSign, Calendar, CreditCard } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { format, startOfMonth, endOfMonth, isWithinInterval } from 'date-fns';
 
@@ -11,6 +11,14 @@ const Finalizado = () => {
   const { contratos, clientes, patinetes } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
   const [filtroMes, setFiltroMes] = useState('todos');
+
+  const metodosPagamento = [
+    { value: 'dinheiro', label: 'Dinheiro' },
+    { value: 'cartao_debito', label: 'Cartão de Débito' },
+    { value: 'cartao_credito', label: 'Cartão de Crédito' },
+    { value: 'pix', label: 'PIX' },
+    { value: 'transferencia', label: 'Transferência' }
+  ];
 
   // Filtrar apenas contratos finalizados
   const contratosFinalizados = contratos.filter(contrato => contrato.status === 'finalizado');
@@ -54,13 +62,29 @@ const Finalizado = () => {
     const minutosTotal = contratosFinalizados.reduce((sum, c) => sum + c.minutosUsados, 0);
     const ticketMedio = totalLocacoes > 0 ? receitaTotal / totalLocacoes : 0;
 
+    // Estatísticas por método de pagamento
+    const estatisticasPagamento = metodosPagamento.reduce((acc, metodo) => {
+      const contratos = contratosFinalizados.filter(c => c.metodoPagamento === metodo.value);
+      const valor = contratos.reduce((sum, c) => sum + c.valorTotal, 0);
+      const quantidade = contratos.length;
+      
+      acc[metodo.value] = { valor, quantidade };
+      return acc;
+    }, {} as Record<string, { valor: number; quantidade: number }>);
+
     return {
       totalLocacoes,
       receitaTotal,
       minutosTotal,
-      ticketMedio
+      ticketMedio,
+      estatisticasPagamento
     };
   }, [contratosFinalizados]);
+
+  const getMetodoPagamentoLabel = (metodo?: string) => {
+    if (!metodo) return 'Não informado';
+    return metodosPagamento.find(m => m.value === metodo)?.label || metodo;
+  };
 
   return (
     <div className="space-y-6">
@@ -134,6 +158,34 @@ const Finalizado = () => {
         </Card>
       </div>
 
+      {/* Estatísticas por Método de Pagamento */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <CreditCard className="h-5 w-5" />
+            <span>Receita por Método de Pagamento</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-5">
+            {metodosPagamento.map(metodo => {
+              const stats = estatisticas.estatisticasPagamento[metodo.value];
+              return (
+                <div key={metodo.value} className="text-center">
+                  <p className="text-lg font-bold text-green-600">
+                    R$ {stats?.valor.toFixed(2) || '0.00'}
+                  </p>
+                  <p className="text-sm text-muted-foreground">{metodo.label}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {stats?.quantidade || 0} locações
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Filtros */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex items-center space-x-2">
@@ -175,6 +227,11 @@ const Finalizado = () => {
                       <Badge variant="secondary" className="bg-green-100 text-green-800">
                         Finalizado
                       </Badge>
+                      {contrato.metodoPagamento && (
+                        <Badge variant="outline" className="bg-blue-50 text-blue-700">
+                          {getMetodoPagamentoLabel(contrato.metodoPagamento)}
+                        </Badge>
+                      )}
                     </div>
                     <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                       <div className="flex items-center space-x-1">
@@ -227,9 +284,17 @@ const Finalizado = () => {
                 )}
 
                 <div className="bg-green-50 p-3 rounded-lg">
-                  <p className="text-xs text-green-700">
-                    ✅ Locação finalizada em {format(new Date(contrato.dataFim || contrato.dataInicio), 'dd/MM/yyyy HH:mm')}
-                  </p>
+                  <div className="flex justify-between items-center">
+                    <p className="text-xs text-green-700">
+                      ✅ Locação finalizada em {format(new Date(contrato.dataFim || contrato.dataInicio), 'dd/MM/yyyy HH:mm')}
+                    </p>
+                    {contrato.metodoPagamento && (
+                      <div className="flex items-center space-x-1 text-xs text-green-700">
+                        <CreditCard className="h-3 w-3" />
+                        <span>{getMetodoPagamentoLabel(contrato.metodoPagamento)}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </CardContent>
             </Card>

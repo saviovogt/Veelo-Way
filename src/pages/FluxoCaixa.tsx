@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, Search, Edit, Trash2, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, TrendingUp, TrendingDown, DollarSign, CreditCard } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { FluxoCaixa } from '@/types';
 import { showSuccess, showError } from '@/utils/toast';
@@ -24,7 +24,8 @@ const FluxoCaixaPage = () => {
     valor: 0,
     descricao: '',
     categoria: '',
-    data: new Date().toISOString().split('T')[0]
+    data: new Date().toISOString().split('T')[0],
+    metodoPagamento: '' as 'dinheiro' | 'cartao_debito' | 'cartao_credito' | 'pix' | 'transferencia' | ''
   });
 
   const categorias = [
@@ -36,6 +37,14 @@ const FluxoCaixaPage = () => {
     'Aluguel',
     'Salários',
     'Outros'
+  ];
+
+  const metodosPagamento = [
+    { value: 'dinheiro', label: 'Dinheiro' },
+    { value: 'cartao_debito', label: 'Cartão de Débito' },
+    { value: 'cartao_credito', label: 'Cartão de Crédito' },
+    { value: 'pix', label: 'PIX' },
+    { value: 'transferencia', label: 'Transferência' }
   ];
 
   const filteredFluxoCaixa = fluxoCaixa.filter(item => {
@@ -75,6 +84,16 @@ const FluxoCaixaPage = () => {
       .filter(f => f.data.startsWith(mesAtual))
       .reduce((sum, f) => sum + f.valor, 0);
 
+    // Estatísticas por método de pagamento
+    const estatisticasPagamento = metodosPagamento.reduce((acc, metodo) => {
+      const valorTotal = entradas
+        .filter(f => f.metodoPagamento === metodo.value)
+        .reduce((sum, f) => sum + f.valor, 0);
+      
+      acc[metodo.value] = valorTotal;
+      return acc;
+    }, {} as Record<string, number>);
+
     return {
       totalEntradas,
       totalSaidas,
@@ -82,7 +101,8 @@ const FluxoCaixaPage = () => {
       entradasHoje,
       saidasHoje,
       entradasMes,
-      saidasMes
+      saidasMes,
+      estatisticasPagamento
     };
   }, [fluxoCaixa]);
 
@@ -92,7 +112,8 @@ const FluxoCaixaPage = () => {
       valor: 0,
       descricao: '',
       categoria: '',
-      data: new Date().toISOString().split('T')[0]
+      data: new Date().toISOString().split('T')[0],
+      metodoPagamento: ''
     });
     setEditingItem(null);
   };
@@ -134,7 +155,8 @@ const FluxoCaixaPage = () => {
       valor: item.valor,
       descricao: item.descricao,
       categoria: item.categoria,
-      data: item.data
+      data: item.data,
+      metodoPagamento: item.metodoPagamento || ''
     });
     setIsDialogOpen(true);
   };
@@ -144,6 +166,11 @@ const FluxoCaixaPage = () => {
       setFluxoCaixa(prev => prev.filter(item => item.id !== id));
       showSuccess('Registro excluído com sucesso!');
     }
+  };
+
+  const getMetodoPagamentoLabel = (metodo?: string) => {
+    if (!metodo) return '';
+    return metodosPagamento.find(m => m.value === metodo)?.label || metodo;
   };
 
   return (
@@ -205,6 +232,7 @@ const FluxoCaixaPage = () => {
                   }>
                     <SelectTrigger>
                       <SelectValue placeholder="Selecione uma categoria" />
+                
                     </SelectTrigger>
                     <SelectContent>
                       {categorias.map(categoria => (
@@ -215,6 +243,26 @@ const FluxoCaixaPage = () => {
                     </SelectContent>
                   </Select>
                 </div>
+
+                {formData.tipo === 'entrada' && (
+                  <div>
+                    <Label htmlFor="metodoPagamento">Método de Pagamento</Label>
+                    <Select value={formData.metodoPagamento} onValueChange={(value: 'dinheiro' | 'cartao_debito' | 'cartao_credito' | 'pix' | 'transferencia') => 
+                      setFormData(prev => ({ ...prev, metodoPagamento: value }))
+                    }>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione o método" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {metodosPagamento.map(metodo => (
+                          <SelectItem key={metodo.value} value={metodo.value}>
+                            {metodo.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
 
                 <div>
                   <Label htmlFor="descricao">Descrição *</Label>
@@ -312,6 +360,28 @@ const FluxoCaixaPage = () => {
         </Card>
       </div>
 
+      {/* Estatísticas por Método de Pagamento */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <CreditCard className="h-5 w-5" />
+            <span>Entradas por Método de Pagamento</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-5">
+            {metodosPagamento.map(metodo => (
+              <div key={metodo.value} className="text-center">
+                <p className="text-lg font-bold text-green-600">
+                  R$ {stats.estatisticasPagamento[metodo.value]?.toFixed(2) || '0.00'}
+                </p>
+                <p className="text-sm text-muted-foreground">{metodo.label}</p>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Filtros */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex items-center space-x-2">
@@ -349,6 +419,11 @@ const FluxoCaixaPage = () => {
                       {item.tipo === 'entrada' ? 'Entrada' : 'Saída'}
                     </Badge>
                     <Badge variant="outline">{item.categoria}</Badge>
+                    {item.metodoPagamento && (
+                      <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                        {getMetodoPagamentoLabel(item.metodoPagamento)}
+                      </Badge>
+                    )}
                   </div>
                   <h3 className="font-medium">{item.descricao}</h3>
                   <p className="text-sm text-muted-foreground">
