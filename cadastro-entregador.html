@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Veelo Way ⚡ — Cadastro Entregador</title>
+<style>
+:root { --black:#111; --gold:#F5C518; --white:#fff; --gray:#f4f4f4; --gray2:#e0e0e0; --green:#27ae60; --red:#e74c3c; --radius:12px; }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Segoe UI',Arial,sans-serif; background:var(--gray); min-height:100vh; }
+.header { background:var(--black); color:var(--white); padding:20px; text-align:center; }
+.logo { font-size:24px; font-weight:900; letter-spacing:1px; }
+.logo span { color:var(--gold); }
+.tagline { font-size:11px; color:#aaa; letter-spacing:2px; text-transform:uppercase; margin-top:4px; }
+.subtitle { font-size:13px; color:#ccc; margin-top:8px; }
+.container { max-width:480px; margin:0 auto; padding:20px; }
+.card { background:var(--white); border-radius:var(--radius); padding:20px; margin-bottom:16px; box-shadow:0 2px 12px rgba(0,0,0,0.08); }
+.section-title { font-size:13px; font-weight:900; text-transform:uppercase; letter-spacing:0.5px; color:#555; margin-bottom:14px; display:flex; align-items:center; gap:6px; }
+.form-group { margin-bottom:14px; }
+.form-label { font-size:12px; font-weight:700; color:#555; text-transform:uppercase; letter-spacing:0.3px; display:block; margin-bottom:5px; }
+.form-input { width:100%; padding:12px 14px; border:1.5px solid var(--gray2); border-radius:8px; font-size:15px; color:#222; background:var(--white); outline:none; transition:border-color 0.2s; }
+.form-input:focus { border-color:var(--gold); }
+select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M0 0l6 8 6-8z' fill='%23666'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.vehicle-selector { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+.vehicle-option { border:2px solid var(--gray2); border-radius:var(--radius); padding:16px 10px; text-align:center; cursor:pointer; transition:all 0.2s; }
+.vehicle-option.selected { border-color:var(--gold); background:#fffbe6; }
+.v-icon { font-size:32px; margin-bottom:6px; }
+.v-name { font-size:13px; font-weight:700; }
+.v-price { font-size:11px; color:#666; margin-top:2px; }
+.plan-options { display:flex; flex-direction:column; gap:8px; }
+.plan-option { border:2px solid var(--gray2); border-radius:10px; padding:13px 14px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:all 0.2s; }
+.plan-option.selected { border-color:var(--gold); background:#fffbe6; }
+.plan-name { font-size:14px; font-weight:700; }
+.plan-price { font-size:15px; font-weight:900; }
+.plan-sub { font-size:11px; color:#666; }
+.btn { display:block; width:100%; padding:16px; border-radius:10px; border:none; font-size:16px; font-weight:900; cursor:pointer; text-align:center; }
+.btn-gold { background:var(--gold); color:var(--black); }
+.btn:active { opacity:0.8; }
+.terms-box { background:var(--gray); border-radius:8px; padding:14px; font-size:12px; color:#555; line-height:1.7; max-height:180px; overflow-y:auto; margin-bottom:12px; border:1px solid var(--gray2); }
+.terms-box b { color:#222; }
+.check-label { display:flex; align-items:flex-start; gap:10px; font-size:13px; cursor:pointer; margin-bottom:10px; }
+.check-label input { margin-top:2px; width:18px; height:18px; flex-shrink:0; accent-color:var(--black); }
+.app-checks { display:flex; gap:16px; flex-wrap:wrap; }
+.app-check { display:flex; align-items:center; gap:6px; font-size:14px; }
+.app-check input { width:18px; height:18px; accent-color:var(--black); }
+.success-screen { display:none; text-align:center; padding:40px 20px; }
+.success-icon { font-size:64px; margin-bottom:16px; }
+.success-title { font-size:22px; font-weight:900; margin-bottom:8px; }
+.success-sub { font-size:14px; color:#555; line-height:1.7; }
+.badge { display:inline-block; padding:6px 16px; border-radius:20px; font-size:13px; font-weight:700; background:var(--gold); color:var(--black); margin-top:12px; }
+.step-indicator { display:flex; gap:6px; justify-content:center; margin-bottom:20px; }
+.step-dot { width:8px; height:8px; border-radius:50%; background:var(--gray2); }
+.step-dot.active { background:var(--gold); width:24px; border-radius:4px; }
+.step-dot.done { background:var(--green); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">VEELO <span>WAY</span> ⚡</div>
+  <div class="tagline">Mobilidade Elétrica • Cabo Frio</div>
+  <div class="subtitle">Cadastro para Entregadores iFood / Rappi / 99Food</div>
+</div>
+
+<div class="container">
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="success-screen">
+    <div class="success-icon">🎉</div>
+    <div class="success-title">Cadastro enviado!</div>
+    <div class="success-sub">
+      Seus dados foram recebidos com sucesso!<br><br>
+      Nossa equipe entrará em contato pelo seu WhatsApp em breve para confirmar os detalhes e agendar a retirada do veículo.<br><br>
+      <b>Lembre-se de trazer:</b><br>
+      📄 RG original<br>
+      📱 CPF<br>
+      💰 Valor da caução<br>
+      📍 Comparecer ao nosso endereço em Cabo Frio
+    </div>
+    <div class="badge" id="success-code"></div>
+    <div style="margin-top:24px;font-size:13px;color:#555;">Dúvidas? Fale conosco pelo WhatsApp 📲</div>
+  </div>
+
+  <!-- FORM -->
+  <div id="main-form">
+
+    <div class="card">
+      <div class="section-title">👤 Dados Pessoais</div>
+      <div class="form-group">
+        <label class="form-label">Nome Completo *</label>
+        <input class="form-input" id="r-name" placeholder="Seu nome completo">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">CPF *</label>
+          <input class="form-input" id="r-cpf" placeholder="000.000.000-00" inputmode="numeric" maxlength="14">
+        </div>
+        <div class="form-group">
+          <label class="form-label">RG *</label>
+          <input class="form-input" id="r-rg" placeholder="0000000-0">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Data de Nasc. *</label>
+          <input class="form-input" id="r-dob" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">WhatsApp *</label>
+          <input class="form-input" id="r-tel1" placeholder="(22) 99999-9999" type="tel" inputmode="numeric">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Telefone 2 (opcional)</label>
+        <input class="form-input" id="r-tel2" placeholder="(22) 99999-9999" type="tel" inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Endereço Completo *</label>
+        <input class="form-input" id="r-address" placeholder="Rua, número, bairro, cidade">
+      </div>
+      <div class="form-group">
+        <label class="form-label">📸 Selfie com Documento *</label>
+        <div id="selfie-area" style="border:2px dashed #ccc;border-radius:10px;padding:16px;text-align:center;cursor:pointer;background:#fafafa;" onclick="document.getElementById('r-selfie').click()">
+          <div id="selfie-preview" style="display:none;"><img id="selfie-img" style="width:100%;max-height:220px;object-fit:cover;border-radius:8px;"></div>
+          <div id="selfie-placeholder">
+            <div style="font-size:40px;margin-bottom:8px;">🤳</div>
+            <div style="font-weight:700;font-size:14px;margin-bottom:4px;">Selfie segurando RG ou CNH</div>
+            <div style="font-size:12px;color:#888;">Toque aqui para abrir a câmera frontal</div>
+          </div>
+        </div>
+        <input type="file" id="r-selfie" accept="image/*" capture="user" style="display:none;" onchange="previewSelfie(this,'selfie-img','selfie-preview','selfie-placeholder','selfie-area')">
+        <div style="font-size:11px;color:#888;margin-top:6px;">📌 Documento precisa estar visível e legível na foto</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">👥 Referências</div>
+      <div class="form-group">
+        <label class="form-label">Referência 1 — Nome e Telefone *</label>
+        <input class="form-input" id="r-ref1" placeholder="Ex: João Silva — (22) 99888-7777">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Referência 2 — Nome e Telefone *</label>
+        <input class="form-input" id="r-ref2" placeholder="Ex: Maria Souza — (22) 99777-6666">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">📱 App de Entrega</div>
+      <div class="app-checks">
+        <label class="app-check"><input type="checkbox" id="app-ifood"> iFood</label>
+        <label class="app-check"><input type="checkbox" id="app-rappi"> Rappi</label>
+        <label class="app-check"><input type="checkbox" id="app-99"> 99Food</label>
+        <label class="app-check"><input type="checkbox" id="app-outros"> Outros</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">🚗 Escolha o Veículo</div>
+      <div class="vehicle-selector">
+        <div class="vehicle-option" id="rvopt-moto" onclick="selectRiderVehicle('moto')">
+          <div class="v-icon">🏍️</div>
+          <div class="v-name">Moto Elétrica</div>
+          <div class="v-price">A partir de R$ 60/dia</div>
+        </div>
+        <div class="vehicle-option" id="rvopt-bike" onclick="selectRiderVehicle('bike')">
+          <div class="v-icon">🚲</div>
+          <div class="v-name">Bicicleta Elétrica</div>
+          <div class="v-price">A partir de R$ 40/dia</div>
+        </div>
+      </div>
+
+      <div id="rider-plans-container" style="display:none;">
+        <label class="form-label">Escolha o Plano *</label>
+        <div class="plan-options" id="rider-plans-list"></div>
+        <div id="caucao-info" style="margin-top:12px;background:#fffbe6;border:1.5px solid var(--gold);border-radius:8px;padding:12px;font-size:13px;display:none;">
+          <b>💰 Caução:</b> <span id="caucao-value"></span> — devolvido ao encerrar o contrato sem danos.
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="contract-preview" style="display:none;">
+      <div class="section-title">📄 Contrato</div>
+      <div class="terms-box" id="contract-summary"></div>
+      <label class="check-label">
+        <input type="checkbox" id="r-terms1">
+        <span>Li e aceito todos os termos do Contrato de Locação da Veelo Way.</span>
+      </label>
+      <label class="check-label">
+        <input type="checkbox" id="r-terms2">
+        <span>Declaro que as informações prestadas são verdadeiras e que tenho aptidão física para conduzir o veículo.</span>
+      </label>
+      <label class="check-label">
+        <input type="checkbox" id="r-terms3">
+        <span>Estou ciente da vistoria semanal obrigatória e do bloqueio remoto por inadimplência.</span>
+      </label>
+    </div>
+
+    <div id="submit-area" style="display:none;margin-bottom:30px;">
+      <button class="btn btn-gold" onclick="submitRider()">⚡ Enviar Cadastro</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function previewSelfie(input, imgId, previewId, placeholderId, areaId) {
+  if (!input.files || !input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById(imgId).src = e.target.result;
+    document.getElementById(previewId).style.display = 'block';
+    document.getElementById(placeholderId).style.display = 'none';
+    document.getElementById(areaId).style.borderColor = '#27ae60';
+    document.getElementById(areaId).style.background = '#f0fff4';
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+const RIDER_PLANS = {
+  moto: [
+    { id:'daily', name:'Diário', price:60, period:'dia' },
+    { id:'weekly', name:'Semanal', price:350, period:'semana' },
+    { id:'monthly', name:'Mensal', price:1100, period:'mês' },
+    { id:'quarterly', name:'Trimestral', price:990, period:'mês' },
+    { id:'biannual', name:'Semestral', price:900, period:'mês' },
+    { id:'annual', name:'Anual', price:800, period:'mês' },
+  ],
+  bike: [
+    { id:'daily', name:'Diário', price:40, period:'dia' },
+    { id:'weekly', name:'Semanal', price:230, period:'semana' },
+    { id:'monthly', name:'Mensal', price:750, period:'mês' },
+    { id:'quarterly', name:'Trimestral', price:680, period:'mês' },
+    { id:'biannual', name:'Semestral', price:620, period:'mês' },
+    { id:'annual', name:'Anual', price:560, period:'mês' },
+  ]
+};
+
+let selectedVehicle = null;
+let selectedPlan = null;
+
+function selectRiderVehicle(type) {
+  selectedVehicle = type;
+  selectedPlan = null;
+  document.querySelectorAll('.vehicle-option').forEach(e=>e.classList.remove('selected'));
+  document.getElementById('rvopt-'+type).classList.add('selected');
+  const plans = RIDER_PLANS[type];
+  document.getElementById('rider-plans-list').innerHTML = plans.map(p=>`
+    <div class="plan-option" id="rp-${p.id}" onclick="selectRiderPlan('${p.id}')">
+      <div><div class="plan-name">${p.name}</div><div class="plan-sub">por ${p.period}</div></div>
+      <div class="plan-price">R$ ${p.price.toLocaleString('pt-BR')}</div>
+    </div>`).join('');
+  document.getElementById('rider-plans-container').style.display = 'block';
+  document.getElementById('caucao-info').style.display = 'none';
+  document.getElementById('contract-preview').style.display = 'none';
+  document.getElementById('submit-area').style.display = 'none';
+}
+
+function selectRiderPlan(id) {
+  selectedPlan = id;
+  document.querySelectorAll('.plan-option').forEach(e=>e.classList.remove('selected'));
+  document.getElementById('rp-'+id).classList.add('selected');
+  const caucaoVal = selectedVehicle === 'moto' ? 'R$ 300,00' : 'R$ 200,00';
+  document.getElementById('caucao-value').textContent = caucaoVal;
+  document.getElementById('caucao-info').style.display = 'block';
+
+  const planData = RIDER_PLANS[selectedVehicle].find(p=>p.id===id);
+  const vName = selectedVehicle === 'moto' ? 'Moto Elétrica 🏍️' : 'Bicicleta Elétrica 🚲';
+  document.getElementById('contract-summary').innerHTML = `
+    <b>RESUMO DO CONTRATO</b><br><br>
+    <b>Veículo:</b> ${vName}<br>
+    <b>Plano:</b> ${planData.name} — R$ ${planData.price.toLocaleString('pt-BR')}/${planData.period}<br>
+    <b>Caução:</b> ${caucaoVal} (devolvido ao encerrar)<br>
+    <b>Pagamento:</b> Antecipado, todo mês no mesmo dia<br><br>
+    <b>Suas responsabilidades:</b><br>
+    • Vistoria semanal obrigatória no local Veelo Way<br>
+    • Pagamento antecipado (multa 2%/dia em atraso)<br>
+    • Responsável por danos causados por mau uso<br>
+    • Furto com BO: paga 50% do veículo | Sem BO: 100%<br>
+    • Proibido ceder, sublocar ou realizar reparos<br><br>
+    <b>Veículo com rastreador GPS e bloqueio remoto.</b><br>
+    Inadimplência +3 dias = bloqueio automático.<br><br>
+    <b>Foro:</b> Comarca de Cabo Frio/RJ
+  `;
+  document.getElementById('contract-preview').style.display = 'block';
+  document.getElementById('submit-area').style.display = 'block';
+}
+
+// CPF mask
+document.getElementById('r-cpf').addEventListener('input', function() {
+  let v = this.value.replace(/\D/g,'');
+  if (v.length>3) v = v.slice(0,3)+'.'+v.slice(3);
+  if (v.length>7) v = v.slice(0,7)+'.'+v.slice(7);
+  if (v.length>11) v = v.slice(0,11)+'-'+v.slice(11);
+  this.value = v.slice(0,14);
+});
+
+function submitRider() {
+  const name = document.getElementById('r-name').value.trim();
+  const cpf = document.getElementById('r-cpf').value.trim();
+  const rg = document.getElementById('r-rg').value.trim();
+  const dob = document.getElementById('r-dob').value;
+  const tel1 = document.getElementById('r-tel1').value.trim();
+  const address = document.getElementById('r-address').value.trim();
+  const ref1 = document.getElementById('r-ref1').value.trim();
+  const ref2 = document.getElementById('r-ref2').value.trim();
+  const t1 = document.getElementById('r-terms1').checked;
+  const t2 = document.getElementById('r-terms2').checked;
+  const t3 = document.getElementById('r-terms3').checked;
+
+  if (!name) { alert('Informe seu nome completo'); return; }
+  if (!cpf || cpf.length < 14) { alert('Informe um CPF válido'); return; }
+  if (!rg) { alert('Informe seu RG'); return; }
+  if (!tel1) { alert('Informe seu WhatsApp'); return; }
+  if (!address) { alert('Informe seu endereço'); return; }
+  if (!ref1 || !ref2) { alert('Informe as duas referências'); return; }
+  if (!selectedVehicle) { alert('Selecione um veículo'); return; }
+  if (!selectedPlan) { alert('Selecione um plano'); return; }
+  if (!t1 || !t2 || !t3) { alert('Você precisa aceitar todos os termos para continuar'); return; }
+
+  // Check selfie
+  const selfieInput = document.getElementById('r-selfie');
+  if (!selfieInput.files || !selfieInput.files[0]) {
+    alert('Por favor tire a selfie com seu documento para continuar'); return;
+  }
+
+  const apps = [];
+  if (document.getElementById('app-ifood').checked) apps.push('iFood');
+  if (document.getElementById('app-rappi').checked) apps.push('Rappi');
+  if (document.getElementById('app-99').checked) apps.push('99Food');
+  if (document.getElementById('app-outros').checked) apps.push('Outros');
+
+  const planData = RIDER_PLANS[selectedVehicle].find(p=>p.id===selectedPlan);
+  const btn = document.querySelector('.btn-gold');
+  if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
+
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const submission = {
+      id: 'RF'+Date.now(),
+      type: 'entregador',
+      name, cpf, rg, dob, tel1,
+      tel2: document.getElementById('r-tel2').value.trim(),
+      address, ref1, ref2, apps,
+      vehicleType: selectedVehicle,
+      plan: planData,
+      selfiePhoto: evt.target.result,
+      submittedAt: new Date().toISOString(),
+      status: 'pending',
+      termsAccepted: true,
+      termsAcceptedAt: new Date().toISOString()
+    };
+
+  // Send to server API
+  fetch('/api/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(submission)
+  })
+  .then(r => r.json())
+  .then(res => {
+    if (res.ok) {
+      document.getElementById('main-form').style.display = 'none';
+      document.getElementById('success-screen').style.display = 'block';
+      document.getElementById('success-code').textContent = 'Protocolo: ' + submission.id;
+      window.scrollTo(0,0);
+    } else {
+      alert('Erro ao enviar. Tente novamente.');
+      if (btn) { btn.disabled = false; btn.textContent = '⚡ Enviar Cadastro'; }
+    }
+  })
+  .catch(()=>{
+    alert('Erro de conexão. Verifique sua internet e tente novamente.');
+    if (btn) { btn.disabled = false; btn.textContent = '⚡ Enviar Cadastro'; }
+  });
+  }; // end fetch
+  reader.readAsDataURL(selfieInput.files[0]);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,2700 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Veelo Way ⚡</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Emoji&display=swap');
+:root {
+  --black: #111111;
+  --gold: #F5C518;
+  --gold-dark: #d4a914;
+  --white: #ffffff;
+  --gray: #f4f4f4;
+  --gray2: #e0e0e0;
+  --text: #222;
+  --text2: #666;
+  --green: #27ae60;
+  --red: #e74c3c;
+  --orange: #e67e22;
+  --blue: #2980b9;
+  --radius: 12px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.10);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: 'Segoe UI', Arial, sans-serif, 'Noto Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; background: var(--gray); color: var(--text); min-height: 100vh; padding-bottom: 70px; }
+
+/* HEADER */
+.header { background: var(--black); color: var(--white); padding: 16px 20px 12px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.header-logo { font-size: 20px; font-weight: 900; letter-spacing: 1px; }
+.header-logo span { color: var(--gold); }
+.header-sub { font-size: 10px; color: #aaa; letter-spacing: 2px; text-transform: uppercase; }
+
+/* BOTTOM NAV */
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--black); display: flex; z-index: 100; border-top: 2px solid var(--gold); }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 8px 0 6px; cursor: pointer; color: #888; font-size: 10px; gap: 3px; transition: color 0.2s; }
+.nav-item.active { color: var(--gold); }
+.nav-item .icon { font-size: 20px; }
+
+/* SCREENS */
+.screen { display: none; padding: 16px; }
+.screen.active { display: block; }
+
+/* CARDS */
+.card { background: var(--white); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; box-shadow: var(--shadow); }
+.card-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text2); margin-bottom: 12px; }
+
+/* STATS */
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.stat-card { background: var(--white); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); text-align: center; }
+.stat-value { font-size: 22px; font-weight: 900; color: var(--black); }
+.stat-label { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.stat-card.gold { background: var(--gold); }
+.stat-card.gold .stat-value, .stat-card.gold .stat-label { color: var(--black); }
+
+/* ALERTS */
+.alert-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--gray2); }
+.alert-item:last-child { border-bottom: none; }
+.alert-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.dot-red { background: var(--red); }
+.dot-orange { background: var(--orange); }
+.dot-gold { background: var(--gold); }
+.alert-text { font-size: 13px; flex: 1; }
+.alert-sub { font-size: 11px; color: var(--text2); }
+
+/* QUICK ACTIONS */
+.quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.quick-btn { background: var(--black); color: var(--white); border: none; border-radius: var(--radius); padding: 16px 10px; font-size: 13px; font-weight: 700; cursor: pointer; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.quick-btn .qicon { font-size: 24px; }
+.quick-btn:active { opacity: 0.8; }
+.quick-btn.gold-btn { background: var(--gold); color: var(--black); }
+
+/* BUTTONS */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 20px; border-radius: 8px; border: none; font-size: 14px; font-weight: 700; cursor: pointer; width: 100%; transition: opacity 0.2s; }
+.btn:active { opacity: 0.8; }
+.btn-black { background: var(--black); color: var(--white); }
+.btn-gold { background: var(--gold); color: var(--black); }
+.btn-red { background: var(--red); color: var(--white); }
+.btn-green { background: var(--green); color: var(--white); }
+.btn-outline { background: transparent; color: var(--black); border: 2px solid var(--black); }
+.btn-sm { padding: 7px 14px; font-size: 12px; width: auto; }
+
+/* FORMS */
+.form-group { margin-bottom: 14px; }
+.form-label { font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.3px; display: block; margin-bottom: 5px; }
+.form-input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--gray2); border-radius: 8px; font-size: 14px; color: var(--text); background: var(--white); outline: none; transition: border-color 0.2s; }
+.form-input:focus { border-color: var(--gold); }
+select.form-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M0 0l6 8 6-8z' fill='%23666'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* BADGES */
+.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.badge-green { background: #d5f5e3; color: #1a8a46; }
+.badge-red { background: #fde8e8; color: #c0392b; }
+.badge-orange { background: #fef3e0; color: #c0872a; }
+.badge-blue { background: #e0f0fb; color: #1a6fa0; }
+.badge-gray { background: #eee; color: #666; }
+.badge-gold { background: var(--gold); color: var(--black); }
+
+/* LIST ITEMS */
+.list-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--gray2); cursor: pointer; }
+.list-item:last-child { border-bottom: none; }
+.list-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--black); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.list-info { flex: 1; min-width: 0; }
+.list-name { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.list-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.list-right { text-align: right; flex-shrink: 0; }
+.list-value { font-size: 14px; font-weight: 700; }
+.list-date { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+/* SECTION HEADER */
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.section-title { font-size: 16px; font-weight: 900; }
+.section-action { font-size: 13px; color: var(--gold-dark); font-weight: 700; cursor: pointer; }
+
+/* TIMER */
+.timer-display { text-align: center; padding: 20px; }
+.timer-time { font-size: 52px; font-weight: 900; color: var(--black); letter-spacing: 2px; font-variant-numeric: tabular-nums; }
+.timer-label { font-size: 13px; color: var(--text2); margin-top: 4px; }
+.timer-extra { font-size: 18px; font-weight: 700; color: var(--red); margin-top: 8px; }
+.timer-active { animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
+
+/* TABS */
+.tabs { display: flex; background: var(--gray2); border-radius: 10px; padding: 3px; margin-bottom: 16px; }
+.tab { flex: 1; text-align: center; padding: 8px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; color: var(--text2); transition: all 0.2s; }
+.tab.active { background: var(--black); color: var(--gold); }
+
+/* MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; align-items: flex-end; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--white); border-radius: 20px 20px 0 0; width: 100%; max-height: 92vh; overflow-y: auto; padding: 20px; }
+.modal-handle { width: 40px; height: 4px; background: var(--gray2); border-radius: 2px; margin: 0 auto 16px; }
+.modal-title { font-size: 18px; font-weight: 900; margin-bottom: 16px; }
+.modal-close { float: right; background: var(--gray); border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 18px; cursor: pointer; line-height: 32px; text-align: center; }
+
+/* EMPTY STATE */
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text2); }
+.empty-icon { font-size: 48px; margin-bottom: 12px; }
+.empty-text { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+.empty-sub { font-size: 13px; }
+
+/* VEHICLE SELECTOR */
+.vehicle-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.vehicle-option { border: 2px solid var(--gray2); border-radius: var(--radius); padding: 14px; text-align: center; cursor: pointer; transition: all 0.2s; }
+.vehicle-option.selected { border-color: var(--gold); background: #fffbe6; }
+.vehicle-option .v-icon { font-size: 28px; margin-bottom: 6px; }
+.vehicle-option .v-name { font-size: 13px; font-weight: 700; }
+.vehicle-option .v-price { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+/* PLAN SELECTOR */
+.plan-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.plan-option { border: 2px solid var(--gray2); border-radius: 10px; padding: 12px 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; }
+.plan-option.selected { border-color: var(--gold); background: #fffbe6; }
+.plan-name { font-size: 14px; font-weight: 700; }
+.plan-price { font-size: 14px; font-weight: 900; color: var(--black); }
+.plan-sub { font-size: 11px; color: var(--text2); }
+
+/* DIVIDER */
+.divider { border: none; border-top: 1px solid var(--gray2); margin: 14px 0; }
+
+/* INSPECTION */
+.insp-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--gray2); }
+.insp-row:last-child { border-bottom: none; }
+
+/* SCROLLABLE TABS */
+.scroll-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 16px; scrollbar-width: none; }
+.scroll-tabs::-webkit-scrollbar { display: none; }
+.scroll-tab { flex-shrink: 0; padding: 7px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; background: var(--gray2); color: var(--text2); border: none; }
+.scroll-tab.active { background: var(--black); color: var(--gold); }
+
+/* CAIXA */
+.caixa-status { border-radius: var(--radius); padding: 16px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+.caixa-open { background: #d5f5e3; border: 2px solid var(--green); }
+.caixa-closed { background: #fde8e8; border: 2px solid var(--red); }
+.resultado-pos { color: var(--green); font-weight: 900; font-size: 18px; }
+.resultado-neg { color: var(--red); font-weight: 900; font-size: 18px; }
+
+/* BAR CHART */
+.bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 80px; padding: 4px 0 20px; position: relative; }
+.bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; }
+.bar { width: 100%; background: var(--gold); border-radius: 4px 4px 0 0; min-height: 2px; transition: height 0.3s; }
+.bar-label { font-size: 9px; color: var(--text2); text-align: center; white-space: nowrap; }
+.bar-value { font-size: 9px; font-weight: 700; color: var(--text); }
+
+/* CONTRACT PRINT */
+.contract-body { font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.6; color: #111; padding: 10px; }
+.contract-body h2 { font-size: 14pt; text-align: center; text-transform: uppercase; margin-bottom: 4px; }
+.contract-body h3 { font-size: 10pt; background: #111; color: #fff; padding: 3px 6px; margin: 12px 0 6px; }
+.contract-body .field-line { border-bottom: 1px solid #333; min-height: 6mm; margin-bottom: 6px; }
+.contract-body .clause { margin-bottom: 8px; font-size: 10pt; }
+.contract-body table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 10pt; }
+.contract-body th { background: #222; color: #fff; padding: 4px 6px; text-align: left; }
+.contract-body td { padding: 3px 6px; border-bottom: 1px solid #ddd; }
+.contract-body .sign-row { display: flex; gap: 20px; margin-top: 20px; }
+.contract-body .sign-block { flex: 1; text-align: center; border-top: 1px solid #333; padding-top: 4px; font-size: 9pt; color: #555; }
+@media print { .modal-close, .btn, nav, .header { display: none !important; } }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <div class="header-logo">VEELO <span>WAY</span> ⚡</div>
+    <div class="header-sub">Mobilidade Elétrica</div>
+  </div>
+  <div id="headerDate" style="font-size:12px;color:#aaa;text-align:right;"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item active" onclick="showScreen('home')" id="nav-home">
+    <span class="icon">🏠</span><span>Início</span>
+  </div>
+  <div class="nav-item" onclick="showScreen('turismo')" id="nav-turismo">
+    <span class="icon">🌊</span><span>Turismo</span>
+  </div>
+  <div class="nav-item" onclick="showScreen('entregadores')" id="nav-entregadores">
+    <span class="icon">📦</span><span>Entregadores</span>
+  </div>
+  <div class="nav-item" onclick="showScreen('frota')" id="nav-frota">
+    <span class="icon">🚗</span><span>Frota</span>
+  </div>
+  <div class="nav-item" onclick="showScreen('caixa')" id="nav-caixa">
+    <span class="icon">💵</span><span>Caixa</span>
+  </div>
+  <div class="nav-item" onclick="showScreen('relatorios')" id="nav-relatorios">
+    <span class="icon">📊</span><span>Relatórios</span>
+  </div>
+</nav>
+
+<!-- ============ HOME ============ -->
+<div class="screen active" id="screen-home">
+  <div class="stats-grid">
+    <div class="stat-card gold">
+      <div class="stat-value" id="stat-hoje">R$ 0</div>
+      <div class="stat-label">Receita Hoje</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-mes">R$ 0</div>
+      <div class="stat-label">Este Mês</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-ativas">0</div>
+      <div class="stat-label">Locações Ativas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-frota">0</div>
+      <div class="stat-label">Veículos Disponíveis</div>
+    </div>
+  </div>
+
+  <div class="quick-actions">
+    <button class="quick-btn" onclick="openModal('modal-new-tourism')">
+      <span class="qicon">🌊</span>Nova Locação Turismo
+    </button>
+    <button class="quick-btn gold-btn" onclick="openModal('modal-new-rider')">
+      <span class="qicon">📦</span>Novo Entregador
+    </button>
+    <button class="quick-btn" onclick="openModal('modal-clients');refreshClients()">
+      <span class="qicon">👥</span>Base de Clientes
+    </button>
+    <button class="quick-btn" onclick="showScreen('caixa')">
+      <span class="qicon">💵</span>Abrir Caixa
+    </button>
+  </div>
+
+  <div style="margin-bottom:14px;position:relative;">
+    <button onclick="openPendingModal()" style="width:100%;background:var(--black);color:var(--white);border:none;border-radius:var(--radius);padding:14px 16px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
+      <span>📲 Cadastros pelo Link</span>
+      <span id="pending-badge" style="background:var(--red);color:#fff;border-radius:50%;width:22px;height:22px;font-size:12px;font-weight:900;display:none;align-items:center;justify-content:center;"></span>
+    </button>
+  </div>
+
+  <div style="background:var(--white);border-radius:var(--radius);padding:14px;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+    <div style="font-size:12px;font-weight:700;color:#555;text-transform:uppercase;margin-bottom:10px;">🔗 Links de Cadastro</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="padding:10px;background:var(--gray);border-radius:8px;">
+        <div style="font-size:12px;font-weight:700;margin-bottom:6px;">🌊 Turismo</div>
+        <div style="font-size:12px;color:#333;word-break:break-all;background:#fff;padding:8px;border-radius:6px;border:1px solid var(--gray2);margin-bottom:6px;">civbfwnw.gensparkclaw.com:8080/cadastro-turismo.html</div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="copyLink('cadastro-turismo.html')" style="flex:1;background:var(--gold);border:none;border-radius:6px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;">📋 Copiar Link</button>
+          <a href="/cadastro-turismo.html" target="_blank" style="flex:1;background:var(--black);color:#fff;border:none;border-radius:6px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;text-align:center;">🔗 Abrir</a>
+        </div>
+      </div>
+      <div style="padding:10px;background:var(--gray);border-radius:8px;">
+        <div style="font-size:12px;font-weight:700;margin-bottom:6px;">📦 Entregadores</div>
+        <div style="font-size:12px;color:#333;word-break:break-all;background:#fff;padding:8px;border-radius:6px;border:1px solid var(--gray2);margin-bottom:6px;">civbfwnw.gensparkclaw.com:8080/cadastro-entregador.html</div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="copyLink('cadastro-entregador.html')" style="flex:1;background:var(--gold);border:none;border-radius:6px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;">📋 Copiar Link</button>
+          <a href="/cadastro-entregador.html" target="_blank" style="flex:1;background:var(--black);color:#fff;border:none;border-radius:6px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;text-align:center;">🔗 Abrir</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="alerts-card">
+    <div class="card-title">⚠️ Alertas</div>
+    <div id="alerts-list">
+      <div class="empty-state" style="padding:16px 0;">
+        <div style="font-size:24px;">✅</div>
+        <div style="font-size:13px;margin-top:6px;color:var(--text2);">Nenhum alerta no momento</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-header">
+      <div class="card-title" style="margin:0;">🌊 Turismo Ativo</div>
+    </div>
+    <div id="home-tourism-list">
+      <div class="empty-state" style="padding:12px 0;"><div style="font-size:12px;color:var(--text2);">Nenhuma locação ativa</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TURISMO ============ -->
+<div class="screen" id="screen-turismo">
+  <div class="scroll-tabs">
+    <button class="scroll-tab active" onclick="setTourismTab('ativas',this)">Ativas</button>
+    <button class="scroll-tab" onclick="setTourismTab('historico',this)">Histórico</button>
+  </div>
+
+  <div id="turismo-ativas">
+    <div id="tourism-active-list"></div>
+    <button class="btn btn-gold" onclick="openModal('modal-new-tourism')" style="margin-top:8px;">+ Nova Locação Turismo</button>
+    <button class="btn btn-outline" onclick="openModal('modal-contract-turismo')" style="margin-top:8px;">📄 Ver Contrato Turismo</button>
+  </div>
+
+  <div id="turismo-historico" style="display:none;">
+    <div id="tourism-history-list"></div>
+  </div>
+</div>
+
+<!-- ============ ENTREGADORES ============ -->
+<div class="screen" id="screen-entregadores">
+  <div class="scroll-tabs">
+    <button class="scroll-tab active" onclick="setRiderTab('ativos',this)">Ativos</button>
+    <button class="scroll-tab" onclick="setRiderTab('inadimplentes',this)">Inadimplentes</button>
+    <button class="scroll-tab" onclick="setRiderTab('todos',this)">Todos</button>
+  </div>
+
+  <div id="riders-list-container"></div>
+  <button class="btn btn-gold" onclick="openModal('modal-new-rider')" style="margin-top:8px;">+ Novo Entregador</button>
+  <button class="btn btn-outline" onclick="openModal('modal-contract-entregadores')" style="margin-top:8px;">📄 Ver Contrato Entregadores</button>
+</div>
+
+<!-- ============ FROTA ============ -->
+<div class="screen" id="screen-frota">
+  <div class="stats-grid" style="margin-bottom:14px;">
+    <div class="stat-card"><div class="stat-value" id="frota-disp">0</div><div class="stat-label">Disponíveis</div></div>
+    <div class="stat-card"><div class="stat-value" id="frota-alug">0</div><div class="stat-label">Alugados</div></div>
+    <div class="stat-card"><div class="stat-value" id="frota-manut">0</div><div class="stat-label">Manutenção</div></div>
+    <div class="stat-card"><div class="stat-value" id="frota-total">0</div><div class="stat-label">Total</div></div>
+  </div>
+  <div id="fleet-list"></div>
+  <button class="btn btn-black" onclick="openModal('modal-new-vehicle')">+ Adicionar Veículo</button>
+</div>
+
+<!-- ============ RELATÓRIOS ============ -->
+<div class="screen" id="screen-relatorios">
+  <div class="card">
+    <div class="card-title">💰 Receita por Módulo</div>
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;text-align:center;padding:12px;background:var(--gray);border-radius:10px;">
+        <div style="font-size:20px;font-weight:900;" id="rel-turismo-total">R$ 0</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:4px;">🌊 Turismo</div>
+      </div>
+      <div style="flex:1;text-align:center;padding:12px;background:var(--gray);border-radius:10px;">
+        <div style="font-size:20px;font-weight:900;" id="rel-ifood-total">R$ 0</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:4px;">📦 Entregadores</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 Locações Ativas</div>
+    <div id="rel-active-rentals"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔴 Pagamentos Atrasados</div>
+    <div id="rel-overdue"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔧 Vistorias Pendentes</div>
+    <div id="rel-inspections"></div>
+  </div>
+</div>
+
+<!-- ============ CAIXA ============ -->
+<div class="screen" id="screen-caixa">
+
+  <div id="caixa-status-card"></div>
+
+  <div class="card">
+    <div class="card-title">📅 Resultado de Hoje</div>
+    <div id="caixa-hoje"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📆 Resultado do Mês</div>
+    <div id="caixa-mes"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-header">
+      <div class="card-title" style="margin:0;">📉 Despesas</div>
+      <span class="section-action" onclick="openModal('modal-new-expense')">+ Lançar</span>
+    </div>
+    <div class="scroll-tabs" style="margin-bottom:10px;">
+      <button class="scroll-tab active" onclick="setExpenseFilter('hoje',this)">Hoje</button>
+      <button class="scroll-tab" onclick="setExpenseFilter('semana',this)">Semana</button>
+      <button class="scroll-tab" onclick="setExpenseFilter('mes',this)">Mês</button>
+    </div>
+    <div id="expense-list"></div>
+  </div>
+
+  <div style="display:flex;gap:10px;margin-bottom:14px;">
+    <button class="btn btn-green" onclick="openModal('modal-open-caixa')" id="btn-open-caixa">✅ Abrir Caixa</button>
+    <button class="btn btn-red" onclick="fecharCaixa()" id="btn-close-caixa" style="display:none;">🔒 Fechar Caixa</button>
+  </div>
+</div>
+
+<!-- ============ CONTRATOS ============ -->
+<div class="screen" id="screen-contratos" style="display:none;"></div>
+
+<!-- ============ MODALS ============ -->
+
+<!-- OPEN CAIXA MODAL -->
+<div class="modal-overlay" id="modal-open-caixa">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('modal-open-caixa')">✕</button>
+    <div class="modal-title">✅ Abrir Caixa</div>
+    <div class="form-group">
+      <label class="form-label">Valor de Abertura (R$)</label>
+      <input class="form-input" type="number" id="caixa-abertura" placeholder="Ex: 200.00" step="0.01">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Observação</label>
+      <input class="form-input" id="caixa-obs" placeholder="Opcional">
+    </div>
+    <button class="btn btn-gold" onclick="abrirCaixa()">✅ Confirmar Abertura</button>
+  </div>
+</div>
+
+<!-- NEW EXPENSE MODAL -->
+<div class="modal-overlay" id="modal-new-expense">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('modal-new-expense')">✕</button>
+    <div class="modal-title">📉 Lançar Despesa</div>
+    <div class="form-group">
+      <label class="form-label">Categoria</label>
+      <select class="form-input" id="exp-cat">
+        <option value="manutencao">🔧 Manutenção</option>
+        <option value="energia">⚡ Energia/Carregamento</option>
+        <option value="aluguel">🏠 Aluguel</option>
+        <option value="salarios">👷 Salários</option>
+        <option value="material">📦 Material de Escritório</option>
+        <option value="marketing">📣 Marketing</option>
+        <option value="combustivel">⛽ Combustível</option>
+        <option value="outros">📋 Outros</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Descrição</label>
+      <input class="form-input" id="exp-desc" placeholder="Descreva a despesa">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Valor (R$)</label>
+        <input class="form-input" type="number" id="exp-value" placeholder="0,00" step="0.01">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Data</label>
+        <input class="form-input" type="date" id="exp-date">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Forma de Pagamento</label>
+      <select class="form-input" id="exp-payment">
+        <option value="pix">PIX</option>
+        <option value="dinheiro">Dinheiro</option>
+        <option value="cartao">Cartão</option>
+        <option value="transferencia">Transferência</option>
+      </select>
+    </div>
+    <button class="btn btn-black" onclick="saveExpense()">💾 Salvar Despesa</button>
+  </div>
+</div>
+
+<!-- CONTRACT TURISMO MODAL -->
+<div class="modal-overlay" id="modal-contract-turismo">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('modal-contract-turismo')">✕</button>
+    <div class="modal-title">📄 Contrato — Turismo</div>
+    <button class="btn btn-outline btn-sm" style="margin-bottom:12px;width:auto;" onclick="printContract('contract-turismo-body')">🖨️ Imprimir</button>
+    <div id="contract-turismo-body" class="contract-body">
+      <h2>Contrato de Locação — Veelo Way</h2>
+      <p style="text-align:center;font-size:9pt;color:#555;">JJ Mobilidade e Serviços Ltda • CNPJ 57.808.810/0001-96 • Av. Assunção, 658 – Cabo Frio/RJ</p>
+      <hr style="margin:8px 0;">
+      <h3>1. Dados do Locatário</h3>
+      <p>Nome: <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+      <div style="display:flex;gap:10px;"><p style="flex:1;">CPF: <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p><p style="flex:1;">Telefone: <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></div>
+      <h3>2. Veículo e Plano</h3>
+      <p>Veículo: ( ) Patinete Elétrica &nbsp;&nbsp; ( ) Moto Elétrica &nbsp;&nbsp;&nbsp; ID/Nº: <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+      <table>
+        <tr><th colspan="3">🛴 Patinete Elétrica</th><th colspan="2">🏍️ Moto Elétrica</th></tr>
+        <tr><td>15 min</td><td>R$ 20,00</td><td></td><td>30 min</td><td>R$ 75,00</td></tr>
+        <tr><td>30 min</td><td>R$ 30,00</td><td></td><td>60 min</td><td>R$ 150,00</td></tr>
+        <tr><td>60 min</td><td>R$ 60,00</td><td></td><td>Excedente/min</td><td>R$ 2,50</td></tr>
+        <tr><td>Excedente/min</td><td>R$ 1,00</td><td></td><td></td><td></td></tr>
+      </table>
+      <div style="display:flex;gap:10px;"><p style="flex:1;">Plano escolhido: <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p><p style="flex:1;">Valor: R$ <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></div>
+      <div style="display:flex;gap:10px;"><p style="flex:1;">Hora início: <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p><p style="flex:1;">Hora devolução: <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></div>
+      <p>Pagamento: ( ) PIX &nbsp; ( ) Crédito &nbsp; ( ) Débito &nbsp; ( ) Dinheiro &nbsp;&nbsp; Caução: ( ) R$300 moto &nbsp; ( ) R$200 patinete</p>
+      <h3>3. Termo de Responsabilidade</h3>
+      <div class="clause">
+        <p><strong>3.1</strong> O Locatário recebe o veículo em perfeitas condições e é <strong>integralmente responsável</strong> por danos causados durante a locação (colisões, quebras, mau uso), arcando com o custo total de reparo.</p>
+        <p><strong>3.2</strong> Em caso de <strong>furto/roubo com BO</strong>: Locatário paga 50% do valor do veículo. Sem BO em 24h: paga 100%.</p>
+        <p><strong>3.3</strong> O veículo possui <strong>rastreador GPS</strong>. Tentativa de remoção = responsabilidade civil e criminal.</p>
+        <p><strong>3.4</strong> É proibido: ceder a terceiros, realizar reparos, usar sob efeito de álcool, circular em calçadas, transportar passageiros.</p>
+        <p><strong>3.5</strong> Atraso: R$1,00/min (patinete) ou R$2,50/min (moto) além do tempo contratado. Atraso +60min sem aviso = uso não autorizado.</p>
+        <p><strong>3.6 Idade mínima:</strong> 18 anos. De 16–17 anos: acompanhado do responsável legal que assina este contrato.</p>
+      </div>
+      <h3>4. Regras de Circulação</h3>
+      <div class="clause">
+        <p><strong>Patinete</strong> (VMIA – CONTRAN 996/2023): ciclovias e vias até 40km/h • velocidade máx. 20km/h • proibido em calçadas e rodovias.</p>
+        <p><strong>Moto Elétrica</strong> (ciclomotor elétrico): não exige CNH • proibido em calçadas, ciclovias e rodovias • capacete recomendado.</p>
+      </div>
+      <h3>5. Declarações</h3>
+      <p>☑ Li e concordo com todos os termos &nbsp; ☑ Informações verdadeiras &nbsp; ☑ Apto fisicamente &nbsp; ☑ Ciente das normas de trânsito</p>
+      <p style="margin-top:8px;">Local: Cabo Frio/RJ &nbsp;&nbsp; Data: ___/___/______</p>
+      <div class="sign-row">
+        <div class="sign-block">Assinatura do Locatário<br><small>Nome: _______________________ CPF: _______________</small></div>
+        <div class="sign-block">Veelo Way — Responsável<br><small>Nome: _______________________</small></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTRACT ENTREGADORES MODAL -->
+<div class="modal-overlay" id="modal-contract-entregadores">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('modal-contract-entregadores')">✕</button>
+    <div class="modal-title">📄 Contrato — Entregadores</div>
+    <button class="btn btn-outline btn-sm" style="margin-bottom:12px;width:auto;" onclick="printContract('contract-entregadores-body')">🖨️ Imprimir</button>
+    <div id="contract-entregadores-body" class="contract-body">
+      <h2>Contrato de Locação — Entregadores</h2>
+      <p style="text-align:center;font-size:9pt;color:#555;">Veelo Way • JJ Mobilidade e Serviços Ltda • CNPJ 57.808.810/0001-96 • Cabo Frio/RJ</p>
+      <hr style="margin:8px 0;">
+      <h3>1. Dados do Locatário</h3>
+      <p>Nome: <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+      <div style="display:flex;gap:10px;"><p style="flex:1;">CPF: <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p><p style="flex:1;">RG: <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></div>
+      <div style="display:flex;gap:10px;"><p style="flex:1;">Tel 1: <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p><p style="flex:1;">Tel 2: <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></div>
+      <p>Endereço: <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+      <div style="display:flex;gap:10px;"><p style="flex:1;">Ref 1: <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p><p style="flex:1;">Ref 2: <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></div>
+      <p>App: ( ) iFood &nbsp; ( ) Rappi &nbsp; ( ) 99Food &nbsp; ( ) Outros: ___________</p>
+      <h3>2. Veículo e Plano</h3>
+      <p>Veículo: ( ) Moto Elétrica &nbsp; ( ) Bicicleta Elétrica &nbsp;&nbsp; ID: <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+      <table>
+        <tr><th>Modalidade</th><th>🏍️ Moto</th><th>🚲 Bicicleta</th></tr>
+        <tr><td>Diário</td><td>R$ 60,00/dia</td><td>R$ 40,00/dia</td></tr>
+        <tr><td>Semanal</td><td>R$ 350,00/sem</td><td>R$ 230,00/sem</td></tr>
+        <tr><td>Mensal</td><td>R$ 1.100,00/mês</td><td>R$ 750,00/mês</td></tr>
+        <tr><td>Trimestral</td><td>R$ 990,00/mês</td><td>R$ 680,00/mês</td></tr>
+        <tr><td>Semestral</td><td>R$ 900,00/mês</td><td>R$ 620,00/mês</td></tr>
+        <tr><td>Anual</td><td>R$ 800,00/mês</td><td>R$ 560,00/mês</td></tr>
+        <tr style="font-weight:700;"><td>Caução entrada</td><td>R$ 300,00</td><td>R$ 200,00</td></tr>
+      </table>
+      <div style="display:flex;gap:10px;"><p style="flex:1;">Plano: <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p><p style="flex:1;">Valor: R$ <span class="field-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p><p style="flex:1;">Vence todo dia: <span class="field-line">&nbsp;&nbsp;</span></p></div>
+      <p>Caução: ( ) Recebida R$ _____ &nbsp;&nbsp; Pagamento: ( ) PIX ( ) Débito ( ) Crédito ( ) Dinheiro</p>
+      <h3>3. Manutenção e Vistoria Semanal</h3>
+      <div class="clause">
+        <p><strong>3.1</strong> A Veelo Way possui equipe técnica própria e é responsável por toda manutenção — sem custo ao Locatário, salvo danos por mau uso.</p>
+        <p><strong>3.2 Vistoria semanal obrigatória:</strong> Locatário apresenta o veículo 1x/semana no local e horário definidos. Não comparecimento → bloqueio remoto imediato.</p>
+        <p><strong>3.3</strong> Proibido realizar qualquer reparo sem autorização. Toda intervenção é exclusividade da equipe Veelo Way.</p>
+      </div>
+      <h3>4. Responsabilidade por Danos e Furto</h3>
+      <div class="clause">
+        <p><strong>4.1</strong> O Locatário é responsável por danos causados por colisões, quedas ou mau uso. Custos de reparo serão cobrados.</p>
+        <p><strong>4.2 Furto/roubo com BO em 24h:</strong> Locatário paga 50% do valor do veículo. Sem BO: paga 100%.</p>
+        <p><strong>4.3</strong> Veículo com <strong>rastreador GPS e bloqueio remoto</strong>. Remoção = crime.</p>
+        <p><strong>4.4</strong> Inadimplência superior a <strong>3 dias</strong>: bloqueio remoto automático e retomada do veículo.</p>
+        <p><strong>4.5 Multa por atraso:</strong> 2% ao dia sobre o valor devido.</p>
+      </div>
+      <h3>5. Proibições</h3>
+      <p>✗ Ceder/sublocar a terceiros &nbsp; ✗ Usar sob efeito de álcool &nbsp; ✗ Circular em calçadas/rodovias &nbsp; ✗ Transportar passageiros &nbsp; ✗ Remover rastreador &nbsp; ✗ Usar fora de entregas por app</p>
+      <h3>6. Rescisão</h3>
+      <p>Aviso prévio de 7 dias. Planos trimestrais/semestrais/anuais: multa de 1 parcela mensal se rescindido antes do prazo. Foro: Comarca de Cabo Frio/RJ.</p>
+      <h3>7. Declarações</h3>
+      <p>☑ Li e concordo com todos os termos &nbsp; ☑ Informações verdadeiras &nbsp; ☑ Ciente da vistoria semanal obrigatória &nbsp; ☑ Ciente do bloqueio remoto por inadimplência</p>
+      <p style="margin-top:8px;">Local: Cabo Frio/RJ &nbsp;&nbsp; Data: ___/___/______</p>
+      <div class="sign-row">
+        <div class="sign-block">Assinatura do Locatário<br><small>Nome: _________________ CPF: ______________</small></div>
+        <div class="sign-block">Responsável Legal (se menor)<br><small>Nome: _________________ CPF: ______________</small></div>
+        <div class="sign-block">Veelo Way — Responsável<br><small>Nome: _________________</small></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NEW TOURISM MODAL -->
+<div class="modal-overlay" id="modal-new-tourism">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('modal-new-tourism')">✕</button>
+    <div class="modal-title">🌊 Nova Locação — Turismo</div>
+
+    <div class="form-group">
+      <label class="form-label">Nome do Cliente</label>
+      <input class="form-input" id="t-name" placeholder="Nome completo">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">CPF</label>
+        <input class="form-input" id="t-cpf" placeholder="000.000.000-00">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Telefone</label>
+        <input class="form-input" id="t-phone" placeholder="(22) 99999-9999">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Veículo</label>
+      <div class="vehicle-selector">
+        <div class="vehicle-option" id="vopt-patinete" onclick="selectTourismVehicle('patinete')">
+          <div class="v-icon">🛴</div>
+          <div class="v-name">Patinete</div>
+          <div class="v-price">A partir de R$20</div>
+        </div>
+        <div class="vehicle-option" id="vopt-moto" onclick="selectTourismVehicle('moto')">
+          <div class="v-icon">🏍️</div>
+          <div class="v-name">Moto Elétrica</div>
+          <div class="v-price">A partir de R$75</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Plano</label>
+      <div class="plan-options" id="tourism-plans"></div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Veículo (ID/Número)</label>
+      <select class="form-input" id="t-vehicle-id"></select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Pagamento</label>
+      <select class="form-input" id="t-payment">
+        <option value="pix">PIX</option>
+        <option value="credito">Cartão de Crédito</option>
+        <option value="debito">Cartão de Débito</option>
+        <option value="dinheiro">Dinheiro</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Caução Recebida</label>
+      <select class="form-input" id="t-caucao">
+        <option value="sim">Sim — recebida</option>
+        <option value="nao">Não cobrado</option>
+      </select>
+    </div>
+
+    <button class="btn btn-gold" onclick="startTourismRental()">⚡ Iniciar Locação</button>
+  </div>
+</div>
+
+<!-- TIMER MODAL -->
+<div class="modal-overlay" id="modal-timer">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="timer-modal-title">⏱️ Locação em Andamento</div>
+    <div class="timer-display">
+      <div class="timer-time timer-active" id="timer-display">00:00</div>
+      <div class="timer-label" id="timer-plan-label"></div>
+      <div class="timer-extra" id="timer-extra-cost"></div>
+    </div>
+    <div class="card" style="background:var(--gray);box-shadow:none;">
+      <div id="timer-details"></div>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:10px;">
+      <button class="btn btn-outline" onclick="closeModal('modal-timer')">Fechar</button>
+      <button class="btn btn-green" onclick="finishRental()" id="finish-btn">✅ Finalizar</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEW RIDER MODAL -->
+<div class="modal-overlay" id="modal-new-rider">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('modal-new-rider')">✕</button>
+    <div class="modal-title">📦 Novo Entregador</div>
+
+    <div class="form-group">
+      <label class="form-label">Nome Completo</label>
+      <input class="form-input" id="r-name" placeholder="Nome completo">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">CPF</label>
+        <input class="form-input" id="r-cpf" placeholder="000.000.000-00">
+      </div>
+      <div class="form-group">
+        <label class="form-label">RG</label>
+        <input class="form-input" id="r-rg" placeholder="0000000-0">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Telefone 1</label>
+        <input class="form-input" id="r-tel1" placeholder="(22) 99999-9999">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Telefone 2</label>
+        <input class="form-input" id="r-tel2" placeholder="(22) 99999-9999">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Endereço</label>
+      <input class="form-input" id="r-address" placeholder="Rua, número, bairro">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Referência 1</label>
+        <input class="form-input" id="r-ref1" placeholder="Nome + telefone">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Referência 2</label>
+        <input class="form-input" id="r-ref2" placeholder="Nome + telefone">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">App de Entrega</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;"><input type="checkbox" id="app-ifood"> iFood</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;"><input type="checkbox" id="app-rappi"> Rappi</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;"><input type="checkbox" id="app-99"> 99Food</label>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <div class="form-group">
+      <label class="form-label">Veículo</label>
+      <div class="vehicle-selector">
+        <div class="vehicle-option" id="rvopt-moto" onclick="selectRiderVehicle('moto')">
+          <div class="v-icon">🏍️</div>
+          <div class="v-name">Moto Elétrica</div>
+          <div class="v-price">A partir de R$60/dia</div>
+        </div>
+        <div class="vehicle-option" id="rvopt-bike" onclick="selectRiderVehicle('bike')">
+          <div class="v-icon">🚲</div>
+          <div class="v-name">Bicicleta Elétrica</div>
+          <div class="v-price">A partir de R$40/dia</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Plano</label>
+      <div class="plan-options" id="rider-plans"></div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Veículo (ID/Número)</label>
+      <select class="form-input" id="r-vehicle-id"></select>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Início</label>
+        <input class="form-input" type="date" id="r-start">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Vencimento parcela</label>
+        <select class="form-input" id="r-due-day">
+          <option>Todo dia 5</option><option>Todo dia 10</option>
+          <option>Todo dia 15</option><option>Todo dia 20</option><option>Todo dia 25</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Caução</label>
+      <select class="form-input" id="r-caucao">
+        <option value="sim">Sim — caução recebida</option>
+        <option value="nao">Não cobrado</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Observações</label>
+      <textarea class="form-input" id="r-notes" rows="2" placeholder="Observações sobre o entregador..."></textarea>
+    </div>
+
+    <button class="btn btn-gold" onclick="saveRider()">✅ Cadastrar Entregador</button>
+  </div>
+</div>
+
+<!-- RIDER DETAIL MODAL -->
+<div class="modal-overlay" id="modal-rider-detail">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('modal-rider-detail')">✕</button>
+    <div id="rider-detail-content"></div>
+  </div>
+</div>
+
+<!-- NEW VEHICLE MODAL -->
+<div class="modal-overlay" id="modal-new-vehicle">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('modal-new-vehicle')">✕</button>
+    <div class="modal-title">🚗 Adicionar Veículo</div>
+    <div class="form-group">
+      <label class="form-label">Tipo</label>
+      <select class="form-input" id="v-type">
+        <option value="patinete">🛴 Patinete Elétrica</option>
+        <option value="moto">🏍️ Moto Elétrica</option>
+        <option value="bike">🚲 Bicicleta Elétrica</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">ID / Número de Série</label>
+        <input class="form-input" id="v-id" placeholder="Ex: VW-001">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cor</label>
+        <input class="form-input" id="v-color" placeholder="Ex: Preto">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Custo de Aquisição (R$)</label>
+      <input class="form-input" type="number" id="v-cost" placeholder="Ex: 6400">
+    </div>
+    <button class="btn btn-black" onclick="saveVehicle()">+ Adicionar Veículo</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" style="display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:700;z-index:999;white-space:nowrap;"></div>
+
+<script>
+// ==================== DATA ====================
+const DB = {
+  get: (k, def=[]) => { try { return JSON.parse(localStorage.getItem('vw_'+k)) ?? def; } catch { return def; } },
+  set: (k, v) => localStorage.setItem('vw_'+k, JSON.stringify(v)),
+};
+
+const TOURISM_PLANS = {
+  patinete: [
+    { id: 'p15', name: '15 minutos', price: 20, minutes: 15, extra: 1 },
+    { id: 'p30', name: '30 minutos', price: 30, minutes: 30, extra: 1 },
+    { id: 'p60', name: '60 minutos', price: 60, minutes: 60, extra: 1 },
+  ],
+  moto: [
+    { id: 'm30', name: '30 minutos', price: 75, minutes: 30, extra: 2.5 },
+    { id: 'm60', name: '60 minutos', price: 150, minutes: 60, extra: 2.5 },
+  ]
+};
+
+const RIDER_PLANS = {
+  moto: [
+    { id: 'daily', name: 'Diário', price: 60, period: 'dia' },
+    { id: 'weekly', name: 'Semanal', price: 350, period: 'semana' },
+    { id: 'monthly', name: 'Mensal', price: 1100, period: 'mês' },
+    { id: 'quarterly', name: 'Trimestral', price: 990, period: 'mês' },
+    { id: 'biannual', name: 'Semestral', price: 900, period: 'mês' },
+    { id: 'annual', name: 'Anual', price: 800, period: 'mês' },
+  ],
+  bike: [
+    { id: 'daily', name: 'Diário', price: 40, period: 'dia' },
+    { id: 'weekly', name: 'Semanal', price: 230, period: 'semana' },
+    { id: 'monthly', name: 'Mensal', price: 750, period: 'mês' },
+    { id: 'quarterly', name: 'Quarterly', price: 680, period: 'mês' },
+    { id: 'biannual', name: 'Semestral', price: 620, period: 'mês' },
+    { id: 'annual', name: 'Anual', price: 560, period: 'mês' },
+  ]
+};
+
+const CAUCAO = { moto: 300, bike: 200, patinete: 200 };
+
+// ==================== STATE ====================
+let selectedTourismVehicle = null;
+let selectedTourismPlan = null;
+let selectedRiderVehicle = null;
+let selectedRiderPlan = null;
+let activeTimerInterval = null;
+let currentTimerRentalId = null;
+
+// ==================== NAVIGATION ====================
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  document.getElementById('nav-'+name).classList.add('active');
+  refreshScreen(name);
+}
+
+function refreshScreen(name) {
+  if (name === 'home') refreshHome();
+  if (name === 'turismo') refreshTurismo();
+  if (name === 'entregadores') refreshRiders();
+  if (name === 'frota') refreshFleet();
+  if (name === 'relatorios') refreshRelatorios();
+}
+
+// ==================== MODALS ====================
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  if (id === 'modal-new-tourism') initTourismModal();
+  if (id === 'modal-new-rider') initRiderModal();
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+// ==================== TOAST ====================
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2500);
+}
+
+// ==================== HOME ====================
+function refreshHome() {
+  const today = new Date().toDateString();
+  const tourism = DB.get('tourism_rentals', []);
+  const riders = DB.get('riders', []);
+  const vehicles = DB.get('vehicles', []);
+
+  // Revenue
+  const todayRevenue = tourism
+    .filter(r => r.endTime && new Date(r.endTime).toDateString() === today)
+    .reduce((s, r) => s + (r.totalCharged || r.plan?.price || 0), 0);
+
+  const monthRevenue = tourism
+    .filter(r => r.endTime) 
+    .reduce((s, r) => s + (r.totalCharged || 0), 0)
+    + riders.reduce((s, r) => s + (r.plan?.price || 0), 0);
+
+  const activeRentals = tourism.filter(r => r.status === 'active').length;
+  const availableVehicles = vehicles.filter(v => v.status === 'available').length;
+
+  document.getElementById('stat-hoje').textContent = 'R$ ' + todayRevenue.toLocaleString('pt-BR');
+  document.getElementById('stat-mes').textContent = 'R$ ' + monthRevenue.toLocaleString('pt-BR');
+  document.getElementById('stat-ativas').textContent = activeRentals + riders.filter(r=>r.status==='active').length;
+  document.getElementById('stat-frota').textContent = availableVehicles;
+
+  // Alerts
+  const alerts = [];
+  const now = new Date();
+  riders.forEach(r => {
+    if (r.status === 'active') {
+      // Check overdue payment
+      const due = new Date(r.nextPaymentDate);
+      if (due < now) {
+        alerts.push({ type:'red', text: r.name, sub: 'Pagamento atrasado desde ' + due.toLocaleDateString('pt-BR') });
+      }
+      // Check inspection
+      if (r.lastInspection) {
+        const li = new Date(r.lastInspection);
+        const diff = (now - li) / (1000*60*60*24);
+        if (diff > 7) alerts.push({ type:'orange', text: r.name, sub: 'Vistoria em atraso — última há ' + Math.floor(diff) + ' dias' });
+      } else {
+        alerts.push({ type:'orange', text: r.name, sub: 'Vistoria não registrada' });
+      }
+    }
+  });
+  tourism.filter(r=>r.status==='active').forEach(r => {
+    const elapsed = (now - new Date(r.startTime)) / 60000;
+    if (elapsed > r.plan.minutes + 30) alerts.push({ type:'gold', text: r.customer, sub: 'Locação turismo com ' + Math.floor(elapsed - r.plan.minutes) + 'min de excedente' });
+  });
+
+  const alertsList = document.getElementById('alerts-list');
+  if (alerts.length === 0) {
+    alertsList.innerHTML = '<div class="empty-state" style="padding:12px 0;"><div style="font-size:24px;">✅</div><div style="font-size:13px;margin-top:6px;color:var(--text2);">Nenhum alerta</div></div>';
+  } else {
+    alertsList.innerHTML = alerts.map(a => `
+      <div class="alert-item">
+        <div class="alert-dot dot-${a.type}"></div>
+        <div><div class="alert-text">${a.text}</div><div class="alert-sub">${a.sub}</div></div>
+      </div>`).join('');
+  }
+
+  // Active tourism
+  const actTourism = tourism.filter(r => r.status === 'active');
+  const homeTList = document.getElementById('home-tourism-list');
+  if (actTourism.length === 0) {
+    homeTList.innerHTML = '<div class="empty-state" style="padding:12px 0;"><div style="font-size:12px;color:var(--text2);">Nenhuma locação ativa</div></div>';
+  } else {
+    homeTList.innerHTML = actTourism.map(r => tourismCard(r, true)).join('');
+  }
+
+  // Date
+  document.getElementById('headerDate').textContent = now.toLocaleDateString('pt-BR', {weekday:'short', day:'2-digit', month:'short'});
+}
+
+// ==================== TOURISM ====================
+function initTourismModal() {
+  selectedTourismVehicle = null;
+  selectedTourismPlan = null;
+  document.querySelectorAll('.vehicle-option').forEach(e => e.classList.remove('selected'));
+  document.getElementById('tourism-plans').innerHTML = '<div style="font-size:12px;color:var(--text2);">Selecione um veículo primeiro</div>';
+  document.getElementById('t-name').value = '';
+  document.getElementById('t-cpf').value = '';
+  document.getElementById('t-phone').value = '';
+  updateVehicleSelect('t-vehicle-id', null);
+}
+
+function selectTourismVehicle(type) {
+  selectedTourismVehicle = type;
+  document.querySelectorAll('#modal-new-tourism .vehicle-option').forEach(e => e.classList.remove('selected'));
+  document.getElementById('vopt-'+type).classList.add('selected');
+  const plans = TOURISM_PLANS[type];
+  document.getElementById('tourism-plans').innerHTML = plans.map(p => `
+    <div class="plan-option" id="tp-${p.id}" onclick="selectTourismPlan('${p.id}')">
+      <div><div class="plan-name">${p.name}</div><div class="plan-sub">Excedente: R$${p.extra}/min</div></div>
+      <div class="plan-price">R$ ${p.price}</div>
+    </div>`).join('');
+  updateVehicleSelect('t-vehicle-id', type === 'patinete' ? 'patinete' : 'moto');
+}
+
+function selectTourismPlan(id) {
+  selectedTourismPlan = id;
+  document.querySelectorAll('#tourism-plans .plan-option').forEach(e => e.classList.remove('selected'));
+  const el = document.getElementById('tp-'+id);
+  if (el) el.classList.add('selected');
+}
+
+function updateVehicleSelect(selectId, type) {
+  const vehicles = DB.get('vehicles', []).filter(v => v.status === 'available' && (!type || v.type === type));
+  const sel = document.getElementById(selectId);
+  if (!sel) return;
+  if (vehicles.length === 0) {
+    sel.innerHTML = '<option value="">Nenhum veículo disponível</option>';
+  } else {
+    sel.innerHTML = vehicles.map(v => `<option value="${v.id}">${v.emoji} ${v.id} — ${v.color}</option>`).join('');
+  }
+}
+
+function startTourismRental() {
+  const name = document.getElementById('t-name').value.trim();
+  const cpf = document.getElementById('t-cpf').value.trim();
+  if (!name || !cpf) { toast('⚠️ Preencha nome e CPF'); return; }
+  if (!selectedTourismVehicle) { toast('⚠️ Selecione um veículo'); return; }
+  if (!selectedTourismPlan) { toast('⚠️ Selecione um plano'); return; }
+
+  const planData = TOURISM_PLANS[selectedTourismVehicle].find(p => p.id === selectedTourismPlan);
+  const vehicleId = document.getElementById('t-vehicle-id').value;
+  const payment = document.getElementById('t-payment').value;
+  const caucao = document.getElementById('t-caucao').value;
+
+  const rental = {
+    id: 'T' + Date.now(),
+    customer: name, cpf, phone: document.getElementById('t-phone').value,
+    vehicleType: selectedTourismVehicle, vehicleId,
+    plan: planData, payment, caucao,
+    startTime: new Date().toISOString(),
+    status: 'active', totalCharged: 0,
+  };
+
+  // Update vehicle status
+  const vehicles = DB.get('vehicles', []);
+  const vidx = vehicles.findIndex(v => v.id === vehicleId);
+  if (vidx >= 0) { vehicles[vidx].status = 'rented'; vehicles[vidx].rentedTo = rental.id; DB.set('vehicles', vehicles); }
+
+  const rentals = DB.get('tourism_rentals', []);
+  rentals.push(rental);
+  DB.set('tourism_rentals', rentals);
+
+  closeModal('modal-new-tourism');
+  toast('✅ Locação iniciada!');
+  openTimerModal(rental.id);
+  refreshHome();
+  refreshTurismo();
+}
+
+function openTimerModal(rentalId) {
+  const rentals = DB.get('tourism_rentals', []);
+  const rental = rentals.find(r => r.id === rentalId);
+  if (!rental) return;
+  currentTimerRentalId = rentalId;
+  document.getElementById('modal-timer').classList.add('open');
+  document.getElementById('timer-modal-title').textContent = '⏱️ ' + rental.customer;
+  document.getElementById('timer-plan-label').textContent = rental.plan.name + ' — R$ ' + rental.plan.price.toFixed(2);
+  const vEmoji = rental.vehicleType === 'patinete' ? '🛴' : '🏍️';
+  document.getElementById('timer-details').innerHTML = `
+    <div class="insp-row"><span>Cliente</span><span><b>${rental.customer}</b></span></div>
+    <div class="insp-row"><span>Veículo</span><span>${vEmoji} ${rental.vehicleId}</span></div>
+    <div class="insp-row"><span>Plano</span><span>${rental.plan.name}</span></div>
+    <div class="insp-row"><span>Excedente</span><span>R$ ${rental.plan.extra}/min</span></div>
+  `;
+  if (activeTimerInterval) clearInterval(activeTimerInterval);
+  activeTimerInterval = setInterval(() => updateTimer(rental), 1000);
+  updateTimer(rental);
+}
+
+function updateTimer(rental) {
+  const rentals = DB.get('tourism_rentals', []);
+  const r = rentals.find(x => x.id === rental.id);
+  if (!r || r.status !== 'active') { clearInterval(activeTimerInterval); return; }
+
+  const elapsed = (Date.now() - new Date(r.startTime).getTime()) / 1000;
+  const planSecs = r.plan.minutes * 60;
+  const remaining = planSecs - elapsed;
+
+  if (remaining >= 0) {
+    const m = Math.floor(remaining / 60);
+    const s = Math.floor(remaining % 60);
+    document.getElementById('timer-display').textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    document.getElementById('timer-display').style.color = remaining < 60 ? 'var(--red)' : 'var(--black)';
+    document.getElementById('timer-extra-cost').textContent = '';
+  } else {
+    const overSecs = Math.abs(remaining);
+    const overMins = Math.ceil(overSecs / 60);
+    const extraCost = overMins * r.plan.extra;
+    const om = Math.floor(overSecs / 60);
+    const os = Math.floor(overSecs % 60);
+    document.getElementById('timer-display').textContent = '+' + String(om).padStart(2,'0') + ':' + String(os).padStart(2,'0');
+    document.getElementById('timer-display').style.color = 'var(--red)';
+    document.getElementById('timer-extra-cost').textContent = '+ R$ ' + extraCost.toFixed(2) + ' excedente';
+  }
+}
+
+function finishRental() {
+  if (!currentTimerRentalId) return;
+  const rentals = DB.get('tourism_rentals', []);
+  const idx = rentals.findIndex(r => r.id === currentTimerRentalId);
+  if (idx < 0) return;
+  const r = rentals[idx];
+  const elapsed = (Date.now() - new Date(r.startTime).getTime()) / 1000;
+  const overSecs = Math.max(0, elapsed - r.plan.minutes * 60);
+  const overMins = Math.ceil(overSecs / 60);
+  const totalCharged = r.plan.price + overMins * r.plan.extra;
+  rentals[idx].status = 'completed';
+  rentals[idx].endTime = new Date().toISOString();
+  rentals[idx].totalCharged = totalCharged;
+  DB.set('tourism_rentals', rentals);
+
+  // Free vehicle
+  const vehicles = DB.get('vehicles', []);
+  const vidx = vehicles.findIndex(v => v.id === r.vehicleId);
+  if (vidx >= 0) { vehicles[vidx].status = 'available'; delete vehicles[vidx].rentedTo; DB.set('vehicles', vehicles); }
+
+  clearInterval(activeTimerInterval);
+  closeModal('modal-timer');
+  toast('✅ Locação finalizada! Total: R$ ' + totalCharged.toFixed(2));
+  refreshHome(); refreshTurismo(); refreshFleet();
+}
+
+function tourismCard(r, compact=false) {
+  const vEmoji = r.vehicleType === 'patinete' ? '🛴' : '🏍️';
+  const start = new Date(r.startTime).toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+  if (compact) {
+    return `<div class="list-item" onclick="openTimerModal('${r.id}')">
+      <div class="list-avatar">${vEmoji}</div>
+      <div class="list-info"><div class="list-name">${r.customer}</div><div class="list-sub">${r.plan.name} • Desde ${start}</div></div>
+      <div><span class="badge badge-green">Ativo</span></div>
+    </div>`;
+  }
+  const status = r.status === 'active' ? '<span class="badge badge-green">Ativo</span>' : '<span class="badge badge-gray">Finalizado</span>';
+  const total = r.totalCharged ? 'R$ ' + r.totalCharged.toFixed(2) : 'R$ ' + r.plan.price.toFixed(2);
+  const deleteBtn = r.status !== 'active' ? `<button onclick="event.stopPropagation();deleteTourismRental('${r.id}')" style="margin-top:6px;padding:5px 10px;background:#e74c3c;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">🗑️ Excluir</button>` : '';
+  return `<div class="list-item" onclick="${r.status==='active' ? `openTimerModal('${r.id}')` : ''}">
+    <div class="list-avatar">${vEmoji}</div>
+    <div class="list-info"><div class="list-name">${r.customer}</div><div class="list-sub">${r.plan.name} • ${start}</div>${deleteBtn}</div>
+    <div class="list-right"><div class="list-value">${total}</div><div>${status}</div></div>
+  </div>`;
+}
+
+function refreshTurismo() {
+  const rentals = DB.get('tourism_rentals', []);
+  const active = rentals.filter(r => r.status === 'active');
+  const history = rentals.filter(r => r.status !== 'active').reverse();
+  const al = document.getElementById('tourism-active-list');
+  const hl = document.getElementById('tourism-history-list');
+  if (active.length === 0) {
+    al.innerHTML = '<div class="empty-state"><div class="empty-icon">🛴</div><div class="empty-text">Nenhuma locação ativa</div><div class="empty-sub">Clique em "+ Nova Locação" para começar</div></div>';
+  } else {
+    al.innerHTML = '<div class="card">' + active.map(r => tourismCard(r)).join('') + '</div>';
+  }
+  if (history.length === 0) {
+    hl.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">Nenhuma locação no histórico</div></div>';
+  } else {
+    hl.innerHTML = '<div class="card">' + history.slice(0,20).map(r => tourismCard(r)).join('') + '</div>';
+  }
+}
+
+function setTourismTab(tab, el) {
+  document.querySelectorAll('#screen-turismo .scroll-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('turismo-ativas').style.display = tab === 'ativas' ? 'block' : 'none';
+  document.getElementById('turismo-historico').style.display = tab === 'historico' ? 'block' : 'none';
+}
+
+// ==================== RIDERS ====================
+function initRiderModal() {
+  selectedRiderVehicle = null; selectedRiderPlan = null;
+  document.querySelectorAll('#modal-new-rider .vehicle-option').forEach(e => e.classList.remove('selected'));
+  document.getElementById('rider-plans').innerHTML = '<div style="font-size:12px;color:var(--text2);">Selecione um veículo primeiro</div>';
+  ['r-name','r-cpf','r-rg','r-tel1','r-tel2','r-address','r-ref1','r-ref2','r-notes'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  document.getElementById('r-start').value = new Date().toISOString().split('T')[0];
+  ['app-ifood','app-rappi','app-99'].forEach(id => { const el = document.getElementById(id); if (el) el.checked = false; });
+}
+
+function selectRiderVehicle(type) {
+  selectedRiderVehicle = type;
+  document.querySelectorAll('#modal-new-rider .vehicle-option').forEach(e => e.classList.remove('selected'));
+  document.getElementById('rvopt-'+type).classList.add('selected');
+  const plans = RIDER_PLANS[type];
+  document.getElementById('rider-plans').innerHTML = plans.map(p => `
+    <div class="plan-option" id="rp-${p.id}" onclick="selectRiderPlan('${p.id}')">
+      <div><div class="plan-name">${p.name}</div><div class="plan-sub">por ${p.period}</div></div>
+      <div class="plan-price">R$ ${p.price}</div>
+    </div>`).join('');
+  updateVehicleSelect('r-vehicle-id', type);
+}
+
+function selectRiderPlan(id) {
+  selectedRiderPlan = id;
+  document.querySelectorAll('#rider-plans .plan-option').forEach(e => e.classList.remove('selected'));
+  const el = document.getElementById('rp-'+id);
+  if (el) el.classList.add('selected');
+}
+
+function saveRider() {
+  const name = document.getElementById('r-name').value.trim();
+  const cpf = document.getElementById('r-cpf').value.trim();
+  if (!name || !cpf) { toast('⚠️ Preencha nome e CPF'); return; }
+  if (!selectedRiderVehicle) { toast('⚠️ Selecione um veículo'); return; }
+  if (!selectedRiderPlan) { toast('⚠️ Selecione um plano'); return; }
+
+  const planData = RIDER_PLANS[selectedRiderVehicle].find(p => p.id === selectedRiderPlan);
+  const vehicleId = document.getElementById('r-vehicle-id').value;
+  const apps = [];
+  if (document.getElementById('app-ifood').checked) apps.push('iFood');
+  if (document.getElementById('app-rappi').checked) apps.push('Rappi');
+  if (document.getElementById('app-99').checked) apps.push('99Food');
+
+  const startDate = document.getElementById('r-start').value;
+  const dueDay = parseInt(document.getElementById('r-due-day').value.replace(/\D/g,'')) || 5;
+  const nextPayment = new Date();
+  nextPayment.setDate(dueDay);
+  if (nextPayment <= new Date()) nextPayment.setMonth(nextPayment.getMonth() + 1);
+
+  const rider = {
+    id: 'R' + Date.now(),
+    name, cpf,
+    rg: document.getElementById('r-rg').value,
+    tel1: document.getElementById('r-tel1').value,
+    tel2: document.getElementById('r-tel2').value,
+    address: document.getElementById('r-address').value,
+    ref1: document.getElementById('r-ref1').value,
+    ref2: document.getElementById('r-ref2').value,
+    apps, vehicleType: selectedRiderVehicle, vehicleId,
+    plan: planData, startDate,
+    dueDay, nextPaymentDate: nextPayment.toISOString(),
+    caucao: document.getElementById('r-caucao').value,
+    notes: document.getElementById('r-notes').value,
+    status: 'active',
+    lastInspection: null,
+    payments: [],
+    createdAt: new Date().toISOString(),
+  };
+
+  // Update vehicle
+  const vehicles = DB.get('vehicles', []);
+  const vidx = vehicles.findIndex(v => v.id === vehicleId);
+  if (vidx >= 0) { vehicles[vidx].status = 'rented'; vehicles[vidx].rentedTo = rider.id; DB.set('vehicles', vehicles); }
+
+  const riders = DB.get('riders', []);
+  riders.push(rider);
+  DB.set('riders', riders);
+
+  closeModal('modal-new-rider');
+  toast('✅ Entregador cadastrado!');
+  refreshRiders(); refreshHome();
+}
+
+function refreshRiders(filter='ativos') {
+  const riders = DB.get('riders', []);
+  const now = new Date();
+  let list = riders;
+  if (filter === 'ativos') list = riders.filter(r => r.status === 'active');
+  if (filter === 'inadimplentes') list = riders.filter(r => r.status === 'active' && new Date(r.nextPaymentDate) < now);
+
+  const container = document.getElementById('riders-list-container');
+  if (list.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📦</div><div class="empty-text">Nenhum entregador aqui</div><div class="empty-sub">Cadastre um novo entregador</div></div>';
+    return;
+  }
+  container.innerHTML = '<div class="card">' + list.map(r => {
+    const overdue = new Date(r.nextPaymentDate) < now;
+    const noInsp = !r.lastInspection || (now - new Date(r.lastInspection)) / 86400000 > 7;
+    const vEmoji = r.vehicleType === 'moto' ? '🏍️' : '🚲';
+    const badge = r.status !== 'active' ? '<span class="badge badge-gray">Inativo</span>' :
+      overdue ? '<span class="badge badge-red">Inadimplente</span>' :
+      noInsp ? '<span class="badge badge-orange">Vistoria</span>' :
+      '<span class="badge badge-green">Em dia</span>';
+    return `<div class="list-item" onclick="openRiderDetail('${r.id}')">
+      <div class="list-avatar">${vEmoji}</div>
+      <div class="list-info">
+        <div class="list-name">${r.name}</div>
+        <div class="list-sub">${r.plan.name} • R$ ${r.plan.price}/${r.plan.period}</div>
+      </div>
+      <div class="list-right">${badge}</div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+function setRiderTab(tab, el) {
+  document.querySelectorAll('#screen-entregadores .scroll-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  refreshRiders(tab);
+}
+
+function openRiderDetail(id) {
+  const riders = DB.get('riders', []);
+  const r = riders.find(x => x.id === id);
+  if (!r) return;
+  const now = new Date();
+  const overdue = new Date(r.nextPaymentDate) < now;
+  const noInsp = !r.lastInspection || (now - new Date(r.lastInspection)) / 86400000 > 7;
+  const vEmoji = r.vehicleType === 'moto' ? '🏍️' : '🚲';
+
+  const statusBadge = r.status !== 'active' ? '<span class="badge badge-gray">Inativo</span>' :
+    overdue ? '<span class="badge badge-red">Inadimplente</span>' :
+    '<span class="badge badge-green">Ativo</span>';
+
+  document.getElementById('rider-detail-content').innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+      <div style="font-size:40px;">${vEmoji}</div>
+      <div><div style="font-size:18px;font-weight:900;">${r.name}</div><div style="margin-top:4px;">${statusBadge}</div></div>
+    </div>
+    <div class="card" style="background:var(--gray);box-shadow:none;">
+      <div class="insp-row"><span style="color:var(--text2);font-size:12px;">CPF</span><span><b>${r.cpf}</b></span></div>
+      <div class="insp-row"><span style="color:var(--text2);font-size:12px;">Tel 1</span><span>${r.tel1||'—'}</span></div>
+      <div class="insp-row"><span style="color:var(--text2);font-size:12px;">Tel 2</span><span>${r.tel2||'—'}</span></div>
+      <div class="insp-row"><span style="color:var(--text2);font-size:12px;">Endereço</span><span>${r.address||'—'}</span></div>
+      <div class="insp-row"><span style="color:var(--text2);font-size:12px;">Apps</span><span>${r.apps?.join(', ')||'—'}</span></div>
+      <div class="insp-row"><span style="color:var(--text2);font-size:12px;">Veículo</span><span>${vEmoji} ${r.vehicleId}</span></div>
+      <div class="insp-row"><span style="color:var(--text2);font-size:12px;">Plano</span><span>${r.plan.name} — R$ ${r.plan.price}/${r.plan.period}</span></div>
+      <div class="insp-row"><span style="color:var(--text2);font-size:12px;">Caução</span><span>${r.caucao === 'sim' ? '✅ Recebido' : '❌ Não cobrado'}</span></div>
+    </div>
+    <div class="card" style="${overdue ? 'border:2px solid var(--red);' : ''}">
+      <div class="card-title">💰 Pagamentos</div>
+      <div class="insp-row">
+        <span>Próximo vencimento</span>
+        <span><b>${new Date(r.nextPaymentDate).toLocaleDateString('pt-BR')}</b></span>
+      </div>
+      ${overdue ? '<div class="alert" style="background:#fde8e8;border-color:var(--red);">🔴 Pagamento em atraso!</div>' : ''}
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button class="btn btn-green btn-sm" onclick="registerPayment('${r.id}')">✅ Registrar Pagamento</button>
+        <button class="btn btn-red btn-sm" onclick="suspendRider('${r.id}')">🚫 Suspender</button>
+      </div>
+    </div>
+    <div class="card" style="${noInsp ? 'border:2px solid var(--orange);' : ''}">
+      <div class="card-title">🔧 Vistoria Semanal</div>
+      <div class="insp-row">
+        <span>Última vistoria</span>
+        <span><b>${r.lastInspection ? new Date(r.lastInspection).toLocaleDateString('pt-BR') : 'Nunca realizada'}</b></span>
+      </div>
+      ${noInsp ? '<div class="alert">⚠️ Vistoria em atraso ou não realizada!</div>' : ''}
+      <button class="btn btn-black btn-sm" style="margin-top:10px;width:auto;" onclick="registerInspection('${r.id}')">✅ Registrar Vistoria Hoje</button>
+    </div>
+    ${r.notes ? `<div class="card"><div class="card-title">📝 Observações</div><p style="font-size:13px;">${r.notes}</p></div>` : ''}
+    <div style="margin-top:8px;margin-bottom:24px;">
+      <button onclick="deleteRider('${r.id}')" style="width:100%;padding:13px;background:#e74c3c;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:900;cursor:pointer;">🗑️ Excluir Entregador</button>
+    </div>
+  `;
+  openModal('modal-rider-detail');
+}
+
+function registerPayment(id) {
+  const riders = DB.get('riders', []);
+  const idx = riders.findIndex(r => r.id === id);
+  if (idx < 0) return;
+  const r = riders[idx];
+  const next = new Date(r.nextPaymentDate);
+  next.setMonth(next.getMonth() + 1);
+  riders[idx].nextPaymentDate = next.toISOString();
+  if (!riders[idx].payments) riders[idx].payments = [];
+  riders[idx].payments.push({ date: new Date().toISOString(), amount: r.plan.price });
+  DB.set('riders', riders);
+  toast('✅ Pagamento de R$ ' + r.plan.price + ' registrado!');
+  closeModal('modal-rider-detail');
+  openRiderDetail(id);
+  refreshHome();
+}
+
+function registerInspection(id) {
+  const riders = DB.get('riders', []);
+  const idx = riders.findIndex(r => r.id === id);
+  if (idx < 0) return;
+  riders[idx].lastInspection = new Date().toISOString();
+  DB.set('riders', riders);
+  toast('✅ Vistoria registrada!');
+  closeModal('modal-rider-detail');
+  openRiderDetail(id);
+  refreshHome();
+}
+
+function suspendRider(id) {
+  const riders = DB.get('riders', []);
+  const idx = riders.findIndex(r => r.id === id);
+  if (idx < 0) return;
+  riders[idx].status = riders[idx].status === 'active' ? 'suspended' : 'active';
+  DB.set('riders', riders);
+  toast(riders[idx].status === 'active' ? '✅ Entregador reativado' : '🚫 Entregador suspenso');
+  closeModal('modal-rider-detail');
+  refreshRiders(); refreshHome();
+}
+
+// ==================== FLEET ====================
+function saveVehicle() {
+  const type = document.getElementById('v-type').value;
+  const id = document.getElementById('v-id').value.trim();
+  const color = document.getElementById('v-color').value.trim();
+  const cost = parseFloat(document.getElementById('v-cost').value) || 0;
+  if (!id) { toast('⚠️ Informe o ID do veículo'); return; }
+  const emoji = type === 'patinete' ? '🛴' : type === 'moto' ? '🏍️' : '🚲';
+  const vehicles = DB.get('vehicles', []);
+  if (vehicles.find(v => v.id === id)) { toast('⚠️ ID já cadastrado'); return; }
+  vehicles.push({ id, type, color, cost, emoji, status: 'available', createdAt: new Date().toISOString() });
+  DB.set('vehicles', vehicles);
+  closeModal('modal-new-vehicle');
+  toast('✅ Veículo adicionado!');
+  refreshFleet();
+}
+
+function refreshFleet() {
+  const vehicles = DB.get('vehicles', []);
+  const disp = vehicles.filter(v => v.status === 'available').length;
+  const alug = vehicles.filter(v => v.status === 'rented').length;
+  const manut = vehicles.filter(v => v.status === 'maintenance').length;
+  document.getElementById('frota-disp').textContent = disp;
+  document.getElementById('frota-alug').textContent = alug;
+  document.getElementById('frota-manut').textContent = manut;
+  document.getElementById('frota-total').textContent = vehicles.length;
+
+  const fl = document.getElementById('fleet-list');
+  if (vehicles.length === 0) {
+    fl.innerHTML = '<div class="empty-state"><div class="empty-icon">🏍️</div><div class="empty-text">Nenhum veículo cadastrado</div><div class="empty-sub">Adicione veículos à sua frota</div></div>';
+    return;
+  }
+  fl.innerHTML = '<div class="card">' + vehicles.map(v => {
+    const badge = v.status === 'available' ? '<span class="badge badge-green">Disponível</span>' :
+      v.status === 'rented' ? '<span class="badge badge-blue">Alugado</span>' :
+      '<span class="badge badge-orange">Manutenção</span>';
+    return `<div class="list-item">
+      <div class="list-avatar">${v.emoji}</div>
+      <div class="list-info"><div class="list-name">${v.id}</div><div class="list-sub">${v.color} • R$ ${v.cost?.toLocaleString('pt-BR')||'—'}</div></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+        ${badge}
+        <div style="display:flex;gap:4px;margin-top:4px;">
+          ${v.status !== 'maintenance' ? `<button class="btn btn-sm btn-outline" style="padding:4px 8px;font-size:11px;" onclick="setVehicleStatus('${v.id}','maintenance')">🔧</button>` : `<button class="btn btn-sm btn-green" style="padding:4px 8px;font-size:11px;" onclick="setVehicleStatus('${v.id}','available')">✅</button>`}
+        </div>
+      </div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+function setVehicleStatus(id, status) {
+  const vehicles = DB.get('vehicles', []);
+  const idx = vehicles.findIndex(v => v.id === id);
+  if (idx >= 0) { vehicles[idx].status = status; DB.set('vehicles', vehicles); }
+  refreshFleet();
+  toast(status === 'maintenance' ? '🔧 Veículo em manutenção' : '✅ Veículo disponível');
+}
+
+// ==================== RELATORIOS ====================
+function refreshRelatorios() {
+  const tourism = DB.get('tourism_rentals', []);
+  const riders = DB.get('riders', []);
+  const now = new Date();
+
+  const tourismRev = tourism.filter(r=>r.status==='completed').reduce((s,r)=>s+(r.totalCharged||0),0);
+  const riderRev = riders.filter(r=>r.payments?.length).reduce((s,r)=>s+r.payments.reduce((a,p)=>a+p.amount,0),0);
+  document.getElementById('rel-turismo-total').textContent = 'R$ ' + tourismRev.toLocaleString('pt-BR');
+  document.getElementById('rel-ifood-total').textContent = 'R$ ' + riderRev.toLocaleString('pt-BR');
+
+  // Active
+  const actEl = document.getElementById('rel-active-rentals');
+  const activeRiders = riders.filter(r=>r.status==='active');
+  const activeTourism = tourism.filter(r=>r.status==='active');
+  if (activeRiders.length + activeTourism.length === 0) {
+    actEl.innerHTML = '<div style="font-size:13px;color:var(--text2);padding:8px 0;">Nenhuma locação ativa</div>';
+  } else {
+    actEl.innerHTML = activeRiders.map(r=>`<div class="insp-row"><span>${r.vehicleType==='moto'?'🏍️':'🚲'} ${r.name}</span><span>R$ ${r.plan.price}/${r.plan.period}</span></div>`).join('')
+    + activeTourism.map(r=>`<div class="insp-row"><span>${r.vehicleType==='moto'?'🏍️':'🛴'} ${r.customer}</span><span class="badge badge-green">Turismo ativo</span></div>`).join('');
+  }
+
+  // Overdue
+  const overdueEl = document.getElementById('rel-overdue');
+  const overdue = riders.filter(r=>r.status==='active' && new Date(r.nextPaymentDate)<now);
+  if (overdue.length === 0) {
+    overdueEl.innerHTML = '<div style="font-size:13px;color:var(--green);padding:8px 0;">✅ Nenhum pagamento atrasado</div>';
+  } else {
+    overdueEl.innerHTML = overdue.map(r=>`<div class="insp-row"><span><b>${r.name}</b></span><span><span class="badge badge-red">Venc. ${new Date(r.nextPaymentDate).toLocaleDateString('pt-BR')}</span></span></div>`).join('');
+  }
+
+  // Inspections
+  const inspEl = document.getElementById('rel-inspections');
+  const noInsp = riders.filter(r=>r.status==='active' && (!r.lastInspection || (now-new Date(r.lastInspection))/86400000>7));
+  if (noInsp.length === 0) {
+    inspEl.innerHTML = '<div style="font-size:13px;color:var(--green);padding:8px 0;">✅ Vistorias em dia</div>';
+  } else {
+    inspEl.innerHTML = noInsp.map(r=>`<div class="insp-row"><span><b>${r.name}</b></span><span><span class="badge badge-orange">${r.lastInspection ? Math.floor((now-new Date(r.lastInspection))/86400000)+'d atrás':'Nunca'}</span></span></div>`).join('');
+  }
+}
+
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded', () => {
+  refreshHome();
+  // Update header date
+  const now = new Date();
+  document.getElementById('headerDate').textContent = now.toLocaleDateString('pt-BR', {weekday:'short', day:'2-digit', month:'short'});
+});
+
+// Refresh timers every 30s on home
+setInterval(() => {
+  const activeNav = document.querySelector('.nav-item.active');
+  if (activeNav && activeNav.id === 'nav-home') refreshHome();
+  if (activeNav && activeNav.id === 'nav-turismo') refreshTurismo();
+}, 30000);
+
+// ==================== CAIXA ====================
+function refreshCaixa(filter='hoje') {
+  const sessions = DB.get('caixa_sessions', []);
+  const current = sessions.find(s => s.status === 'open');
+  const statusCard = document.getElementById('caixa-status-card');
+  const btnOpen = document.getElementById('btn-open-caixa');
+  const btnClose = document.getElementById('btn-close-caixa');
+
+  if (current) {
+    const since = new Date(current.openedAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    statusCard.innerHTML = `<div class="caixa-status caixa-open"><div><div style="font-weight:900;font-size:15px;">🟢 Caixa Aberto</div><div style="font-size:12px;color:#1a8a46;">Desde ${since} • Abertura: R$ ${current.openingBalance.toFixed(2)}</div></div><span class="badge badge-green">ABERTO</span></div>`;
+    if (btnOpen) btnOpen.style.display = 'none';
+    if (btnClose) btnClose.style.display = '';
+  } else {
+    const last = sessions.filter(s=>s.status==='closed').sort((a,b)=>new Date(b.closedAt)-new Date(a.closedAt))[0];
+    statusCard.innerHTML = `<div class="caixa-status caixa-closed"><div><div style="font-weight:900;font-size:15px;">🔴 Caixa Fechado</div><div style="font-size:12px;color:#c0392b;">${last ? 'Último fechamento: '+new Date(last.closedAt).toLocaleDateString('pt-BR') : 'Nenhum caixa aberto hoje'}</div></div><span class="badge badge-red">FECHADO</span></div>`;
+    if (btnOpen) btnOpen.style.display = '';
+    if (btnClose) btnClose.style.display = 'none';
+  }
+
+  // Summaries
+  const now = new Date();
+  const todayStr = now.toDateString();
+  const mesStr = now.getFullYear()+'-'+(now.getMonth()+1);
+
+  const tourismRentals = DB.get('tourism_rentals',[]);
+  const riders = DB.get('riders',[]);
+  const expenses = DB.get('expenses',[]);
+
+  function calcRevenues(filterFn) {
+    const tRev = tourismRentals.filter(r=>r.status==='completed' && filterFn(new Date(r.endTime))).reduce((s,r)=>s+(r.totalCharged||0),0);
+    const rRev = riders.reduce((s,r)=>{
+      const pays = (r.payments||[]).filter(p=>filterFn(new Date(p.date)));
+      return s + pays.reduce((a,p)=>a+p.amount,0);
+    },0);
+    return {tRev, rRev, total: tRev+rRev};
+  }
+  function calcExpenses(filterFn) {
+    return expenses.filter(e=>filterFn(new Date(e.date))).reduce((s,e)=>s+(e.value||0),0);
+  }
+
+  const todayFilter = d => d.toDateString() === todayStr;
+  const mesFilter = d => (d.getFullYear()+'-'+(d.getMonth()+1)) === mesStr;
+
+  const todayRev = calcRevenues(todayFilter);
+  const todayExp = calcExpenses(todayFilter);
+  const todayResult = todayRev.total - todayExp;
+
+  const mesRev = calcRevenues(mesFilter);
+  const mesExp = calcExpenses(mesFilter);
+  const mesResult = mesRev.total - mesExp;
+
+  function resultRow(label, value, isCurrency=true) {
+    const formatted = isCurrency ? 'R$ '+Math.abs(value).toLocaleString('pt-BR',{minimumFractionDigits:2}) : value;
+    const color = value < 0 ? 'var(--red)' : 'var(--green)';
+    const sign = value < 0 ? '-' : '';
+    return `<div class="insp-row"><span style="font-size:13px;">${label}</span><span style="font-weight:700;color:${isCurrency && value<0?color:'var(--text)'};">${isCurrency?sign:''}${formatted}</span></div>`;
+  }
+
+  document.getElementById('caixa-hoje').innerHTML =
+    resultRow('🌊 Turismo', todayRev.tRev) +
+    resultRow('📦 Entregadores', todayRev.rRev) +
+    resultRow('💰 Total Receitas', todayRev.total) +
+    resultRow('📉 Total Despesas', -todayExp) +
+    `<div class="insp-row" style="border-top:2px solid var(--black);margin-top:4px;"><span style="font-weight:900;">Resultado do Dia</span><span class="${todayResult>=0?'resultado-pos':'resultado-neg'}">R$ ${todayResult.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span></div>`;
+
+  document.getElementById('caixa-mes').innerHTML =
+    resultRow('🌊 Turismo', mesRev.tRev) +
+    resultRow('📦 Entregadores', mesRev.rRev) +
+    resultRow('💰 Total Receitas', mesRev.total) +
+    resultRow('📉 Total Despesas', -mesExp) +
+    `<div class="insp-row" style="border-top:2px solid var(--black);margin-top:4px;"><span style="font-weight:900;">Resultado do Mês</span><span class="${mesResult>=0?'resultado-pos':'resultado-neg'}">R$ ${mesResult.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span></div>`;
+
+  // Expense list
+  refreshExpenses(filter);
+}
+
+function setExpenseFilter(f, el) {
+  document.querySelectorAll('#screen-caixa .scroll-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  refreshExpenses(f);
+}
+
+function refreshExpenses(filter='hoje') {
+  const expenses = DB.get('expenses',[]);
+  const now = new Date();
+  const todayStr = now.toDateString();
+  const weekAgo = new Date(now - 7*24*60*60*1000);
+  const mesStr = now.getFullYear()+'-'+(now.getMonth()+1);
+
+  let list = expenses;
+  if (filter==='hoje') list = expenses.filter(e=>new Date(e.date).toDateString()===todayStr);
+  if (filter==='semana') list = expenses.filter(e=>new Date(e.date)>=weekAgo);
+  if (filter==='mes') list = expenses.filter(e=>{const d=new Date(e.date);return (d.getFullYear()+'-'+(d.getMonth()+1))===mesStr;});
+  list = [...list].sort((a,b)=>new Date(b.date)-new Date(a.date));
+
+  const CAT_LABELS = {manutencao:'🔧 Manutenção',energia:'⚡ Energia',aluguel:'🏠 Aluguel',salarios:'👷 Salários',material:'📦 Material',marketing:'📣 Marketing',combustivel:'⛽ Combustível',outros:'📋 Outros'};
+  const el = document.getElementById('expense-list');
+  if (list.length===0) {
+    el.innerHTML = '<div style="font-size:13px;color:var(--text2);padding:12px 0;text-align:center;">Nenhuma despesa neste período</div>';
+    return;
+  }
+  el.innerHTML = list.map(e=>`
+    <div class="list-item">
+      <div class="list-avatar" style="background:#fde8e8;font-size:16px;">${(CAT_LABELS[e.category]||'📋').split(' ')[0]}</div>
+      <div class="list-info">
+        <div class="list-name">${e.description||CAT_LABELS[e.category]||'Despesa'}</div>
+        <div class="list-sub">${CAT_LABELS[e.category]||e.category} • ${new Date(e.date).toLocaleDateString('pt-BR')}</div>
+      </div>
+      <div class="list-right">
+        <div class="list-value" style="color:var(--red);">- R$ ${(e.value||0).toLocaleString('pt-BR',{minimumFractionDigits:2})}</div>
+        <button onclick="deleteExpense('${e.id}')" style="font-size:11px;background:none;border:none;color:var(--text2);cursor:pointer;margin-top:2px;">🗑️</button>
+      </div>
+    </div>`).join('');
+}
+
+function saveExpense() {
+  const value = parseFloat(document.getElementById('exp-value').value);
+  const desc = document.getElementById('exp-desc').value.trim();
+  const cat = document.getElementById('exp-cat').value;
+  if (!value || value<=0) { toast('⚠️ Informe o valor'); return; }
+  const expense = {
+    id: 'E'+Date.now(),
+    category: cat,
+    description: desc,
+    value,
+    payment: document.getElementById('exp-payment').value,
+    date: document.getElementById('exp-date').value || new Date().toISOString(),
+    createdAt: new Date().toISOString()
+  };
+  const expenses = DB.get('expenses',[]);
+  expenses.push(expense);
+  DB.set('expenses', expenses);
+  closeModal('modal-new-expense');
+  toast('✅ Despesa lançada: R$ '+value.toFixed(2));
+  refreshCaixa();
+}
+
+function deleteExpense(id) {
+  if (!confirm('Excluir esta despesa?')) return;
+  const expenses = DB.get('expenses',[]).filter(e=>e.id!==id);
+  DB.set('expenses', expenses);
+  toast('🗑️ Despesa removida');
+  refreshCaixa();
+}
+
+function abrirCaixa() {
+  const balance = parseFloat(document.getElementById('caixa-abertura').value)||0;
+  const obs = document.getElementById('caixa-obs').value;
+  const sessions = DB.get('caixa_sessions',[]);
+  sessions.push({
+    id:'C'+Date.now(), status:'open',
+    openingBalance: balance, obs,
+    openedAt: new Date().toISOString()
+  });
+  DB.set('caixa_sessions', sessions);
+  closeModal('modal-open-caixa');
+  toast('✅ Caixa aberto com R$ '+balance.toFixed(2));
+  refreshCaixa();
+}
+
+function fecharCaixa() {
+  const sessions = DB.get('caixa_sessions',[]);
+  const idx = sessions.findIndex(s=>s.status==='open');
+  if (idx<0) return;
+
+  // Calculate totals
+  const now = new Date();
+  const todayStr = now.toDateString();
+  const tourismRentals = DB.get('tourism_rentals',[]);
+  const riders = DB.get('riders',[]);
+  const expenses = DB.get('expenses',[]);
+  const tRev = tourismRentals.filter(r=>r.status==='completed'&&new Date(r.endTime).toDateString()===todayStr).reduce((s,r)=>s+(r.totalCharged||0),0);
+  const rRev = riders.reduce((s,r)=>(s+(r.payments||[]).filter(p=>new Date(p.date).toDateString()===todayStr).reduce((a,p)=>a+p.amount,0)),0);
+  const totalExp = expenses.filter(e=>new Date(e.date).toDateString()===todayStr).reduce((s,e)=>s+(e.value||0),0);
+  const closing = sessions[idx].openingBalance + tRev + rRev - totalExp;
+
+  sessions[idx].status='closed';
+  sessions[idx].closedAt=now.toISOString();
+  sessions[idx].totalRevenue=tRev+rRev;
+  sessions[idx].totalExpenses=totalExp;
+  sessions[idx].closingBalance=closing;
+  DB.set('caixa_sessions', sessions);
+  toast('🔒 Caixa fechado! Saldo final: R$ '+closing.toFixed(2));
+  refreshCaixa();
+}
+
+// ==================== CONTRATOS ====================
+function printContract(id) {
+  const content = document.getElementById(id).innerHTML;
+  const w = window.open('','_blank');
+  w.document.write('<html><head><title>Contrato Veelo Way</title><style>body{font-family:Arial,sans-serif;font-size:10pt;color:#111;padding:20px;} h2{text-align:center;text-transform:uppercase;} h3{background:#111;color:#fff;padding:3px 6px;margin:10px 0 6px;} table{width:100%;border-collapse:collapse;} th{background:#222;color:#fff;padding:3px 6px;} td{padding:2px 6px;border-bottom:1px solid #ddd;} .field-line{border-bottom:1px solid #333;display:inline-block;min-width:60px;} .sign-row{display:flex;gap:20px;margin-top:20px;} .sign-block{flex:1;text-align:center;border-top:1px solid #333;padding-top:4px;font-size:9pt;}</style></head><body>'+content+'</body></html>');
+  w.document.close();
+  w.print();
+}
+
+// Patch showScreen to handle caixa
+const _origShowScreen = showScreen;
+showScreen = function(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const scr = document.getElementById('screen-'+name);
+  if (scr) { scr.classList.add('active'); scr.style.display=''; }
+  const nav = document.getElementById('nav-'+name);
+  if (nav) nav.classList.add('active');
+  if (name==='caixa') refreshCaixa();
+  else if (name==='home') refreshHome();
+  else if (name==='turismo') refreshTurismo();
+  else if (name==='entregadores') refreshRiders();
+  else if (name==='frota') refreshFleet();
+  else if (name==='relatorios') refreshRelatorios();
+};
+
+// Init expense date default
+document.addEventListener('DOMContentLoaded', ()=>{
+  const expDate = document.getElementById('exp-date');
+  if (expDate) expDate.value = new Date().toISOString().split('T')[0];
+  updateNotificationBadge();
+});
+
+// ==================== FEATURE 2: NOTIFICATION BADGE ====================
+function updateNotificationBadge() {
+  const riders = DB.get('riders',[]);
+  const now = new Date();
+  const in3days = new Date(now.getTime() + 3*24*60*60*1000);
+  const count = riders.filter(r => {
+    if (r.status !== 'active') return false;
+    const due = new Date(r.nextPaymentDate);
+    return due <= in3days;
+  }).length;
+  const nav = document.getElementById('nav-entregadores');
+  if (!nav) return;
+  let badge = nav.querySelector('.notif-badge');
+  if (count > 0) {
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'notif-badge';
+      badge.style.cssText = 'position:absolute;top:4px;right:8px;background:var(--red);color:#fff;border-radius:50%;width:16px;height:16px;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;line-height:1;';
+      nav.style.position = 'relative';
+      nav.appendChild(badge);
+    }
+    badge.textContent = count > 9 ? '9+' : count;
+  } else if (badge) {
+    badge.remove();
+  }
+}
+
+// ==================== FEATURE 1: WHATSAPP MESSAGES ====================
+function sendWhatsApp(riderId, type) {
+  const riders = DB.get('riders',[]);
+  const r = riders.find(x=>x.id===riderId);
+  if (!r) return;
+  const phone = (r.tel1||'').replace(/\D/g,'');
+  if (!phone) { toast('⚠️ Entregador sem telefone cadastrado'); return; }
+  const due = new Date(r.nextPaymentDate).toLocaleDateString('pt-BR');
+  let msg = '';
+  if (type === 'vencendo') {
+    msg = `Olá ${r.name}! Sua parcela da Veelo Way no valor de R$ ${r.plan.price},00 vence em ${due}. Qualquer dúvida, estamos à disposição! ⚡`;
+  } else {
+    msg = `Olá ${r.name}! Sua parcela da Veelo Way no valor de R$ ${r.plan.price},00 está em atraso desde ${due}. Por favor regularize para evitar o bloqueio do veículo. ⚡`;
+  }
+  const url = `https://wa.me/55${phone}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+// ==================== FEATURE 4: RECEIPT ====================
+let lastFinishedRental = null;
+
+function showReceipt(rental) {
+  lastFinishedRental = rental;
+  const elapsed = (new Date(rental.endTime) - new Date(rental.startTime)) / 1000;
+  const overSecs = Math.max(0, elapsed - rental.plan.minutes * 60);
+  const overMins = Math.ceil(overSecs / 60);
+  const extraCost = overMins * rental.plan.extra;
+  const total = rental.plan.price + extraCost;
+  const startStr = new Date(rental.startTime).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  const endStr = new Date(rental.endTime).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  const dateStr = new Date(rental.endTime).toLocaleDateString('pt-BR');
+  const vEmoji = rental.vehicleType === 'patinete' ? '🛴' : '🏍️';
+  const payLabels = {pix:'PIX',credito:'Cartão de Crédito',debito:'Cartão de Débito',dinheiro:'Dinheiro'};
+
+  const receiptText = `🧾 RECIBO VEELO WAY ⚡\n${dateStr}\n\nCliente: ${rental.customer}\nVeículo: ${vEmoji} ${rental.vehicleId}\nPlano: ${rental.plan.name}\nInício: ${startStr} | Fim: ${endStr}\n\nSubtotal: R$ ${rental.plan.price.toFixed(2)}${extraCost>0?'\nExcedente ('+overMins+'min): R$ '+extraCost.toFixed(2):''}\nTOTAL: R$ ${total.toFixed(2)}\nPagamento: ${payLabels[rental.payment]||rental.payment}\n\nObrigado pela preferência! 🙏`;
+
+  document.getElementById('receipt-content').innerHTML = `
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:22px;font-weight:900;">VEELO WAY ⚡</div>
+      <div style="font-size:11px;color:var(--text2);">Mobilidade Elétrica • Cabo Frio/RJ</div>
+      <div style="font-size:12px;margin-top:4px;">${dateStr}</div>
+    </div>
+    <div style="border-top:2px dashed var(--gray2);border-bottom:2px dashed var(--gray2);padding:12px 0;margin-bottom:12px;">
+      <div class="insp-row"><span>Cliente</span><span><b>${rental.customer}</b></span></div>
+      <div class="insp-row"><span>Veículo</span><span>${vEmoji} ${rental.vehicleId}</span></div>
+      <div class="insp-row"><span>Plano</span><span>${rental.plan.name}</span></div>
+      <div class="insp-row"><span>Início</span><span>${startStr}</span></div>
+      <div class="insp-row"><span>Fim</span><span>${endStr}</span></div>
+    </div>
+    <div class="insp-row"><span>Subtotal</span><span>R$ ${rental.plan.price.toFixed(2)}</span></div>
+    ${extraCost>0?`<div class="insp-row"><span>Excedente (${overMins}min × R$${rental.plan.extra})</span><span style="color:var(--red);">R$ ${extraCost.toFixed(2)}</span></div>`:''}
+    <div class="insp-row" style="border-top:2px solid var(--black);margin-top:4px;"><span style="font-weight:900;font-size:15px;">TOTAL</span><span style="font-weight:900;font-size:18px;color:var(--green);">R$ ${total.toFixed(2)}</span></div>
+    <div class="insp-row"><span>Pagamento</span><span>${payLabels[rental.payment]||rental.payment}</span></div>
+    <div style="text-align:center;margin-top:16px;font-size:12px;color:var(--text2);">Obrigado pela preferência! 🙏</div>
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <button class="btn btn-green" onclick="sendReceiptWhatsApp('${rental.customer}','${rental.cpf||''}',${JSON.stringify(receiptText).replace(/'/g,'\\x27')})">📲 WhatsApp</button>
+      <button class="btn btn-outline" onclick="printReceiptContent()">🖨️ Imprimir</button>
+    </div>
+  `;
+  openModal('modal-receipt');
+}
+
+function sendReceiptWhatsApp(name, cpf, text) {
+  // Try to find phone from tourism rentals
+  const rentals = DB.get('tourism_rentals',[]);
+  const r = rentals.find(x=>x.customer===name);
+  const phone = r?.phone?.replace(/\D/g,'') || '';
+  if (phone) {
+    window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(text)}`, '_blank');
+  } else {
+    navigator.clipboard.writeText(text).then(()=>toast('📋 Recibo copiado! Cole no WhatsApp'));
+  }
+}
+
+function printReceiptContent() {
+  const c = document.getElementById('receipt-content').innerHTML;
+  const w = window.open('','_blank');
+  w.document.write('<html><head><title>Recibo Veelo Way</title><style>body{font-family:Arial,sans-serif;font-size:11pt;padding:20px;max-width:300px;margin:auto;} .insp-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee;} button{display:none;}</style></head><body>'+c+'</body></html>');
+  w.document.close(); w.print();
+}
+
+// Patch finishRental to show receipt
+const _origFinishRental = finishRental;
+finishRental = function() {
+  if (!currentTimerRentalId) return;
+  const rentals = DB.get('tourism_rentals', []);
+  const idx = rentals.findIndex(r => r.id === currentTimerRentalId);
+  if (idx < 0) return;
+  const r = rentals[idx];
+  const elapsed = (Date.now() - new Date(r.startTime).getTime()) / 1000;
+  const overSecs = Math.max(0, elapsed - r.plan.minutes * 60);
+  const overMins = Math.ceil(overSecs / 60);
+  const totalCharged = r.plan.price + overMins * r.plan.extra;
+  rentals[idx].status = 'completed';
+  rentals[idx].endTime = new Date().toISOString();
+  rentals[idx].totalCharged = totalCharged;
+  DB.set('tourism_rentals', rentals);
+  const vehicles = DB.get('vehicles', []);
+  const vidx = vehicles.findIndex(v => v.id === r.vehicleId);
+  if (vidx >= 0) { vehicles[vidx].status = 'available'; delete vehicles[vidx].rentedTo; DB.set('vehicles', vehicles); }
+  clearInterval(activeTimerInterval);
+  closeModal('modal-timer');
+  toast('✅ Total: R$ ' + totalCharged.toFixed(2));
+  refreshHome(); refreshTurismo(); refreshFleet();
+  setTimeout(()=>showReceipt(rentals[idx]), 300);
+};
+
+// ==================== FEATURE 3: INSPECTION WITH PHOTO ====================
+function registerInspectionWithPhoto(id) {
+  document.getElementById('insp-rider-id').value = id;
+  document.getElementById('insp-photo').value = '';
+  document.getElementById('insp-notes').value = '';
+  openModal('modal-inspection');
+}
+
+function saveInspection() {
+  const id = document.getElementById('insp-rider-id').value;
+  const notes = document.getElementById('insp-notes').value;
+  const photoInput = document.getElementById('insp-photo');
+  const riders = DB.get('riders',[]);
+  const idx = riders.findIndex(r=>r.id===id);
+  if (idx<0) return;
+
+  function doSave(photoData) {
+    const insp = { date: new Date().toISOString(), notes, photo: photoData||null };
+    if (!riders[idx].inspections) riders[idx].inspections = [];
+    riders[idx].inspections.unshift(insp);
+    if (riders[idx].inspections.length > 10) riders[idx].inspections = riders[idx].inspections.slice(0,10);
+    riders[idx].lastInspection = insp.date;
+    DB.set('riders', riders);
+    closeModal('modal-inspection');
+    toast('✅ Vistoria registrada!');
+    refreshHome();
+    openRiderDetail(id);
+    updateNotificationBadge();
+  }
+
+  if (photoInput.files && photoInput.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => doSave(e.target.result);
+    reader.readAsDataURL(photoInput.files[0]);
+  } else {
+    doSave(null);
+  }
+}
+
+// ==================== FEATURE 5: 7-DAY CHART ====================
+function build7DayChart() {
+  const tourismRentals = DB.get('tourism_rentals',[]);
+  const riders = DB.get('riders',[]);
+  const days = [];
+  const now = new Date();
+  const dayNames = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  for (let i=6; i>=0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate()-i);
+    const dStr = d.toDateString();
+    const tRev = tourismRentals.filter(r=>r.status==='completed'&&new Date(r.endTime).toDateString()===dStr).reduce((s,r)=>s+(r.totalCharged||0),0);
+    const rRev = riders.reduce((s,r)=>(s+(r.payments||[]).filter(p=>new Date(p.date).toDateString()===dStr).reduce((a,p)=>a+p.amount,0)),0);
+    days.push({ label: dayNames[d.getDay()], value: tRev+rRev, isToday: i===0 });
+  }
+  const maxVal = Math.max(...days.map(d=>d.value), 1);
+  return `<div class="bar-chart">${days.map(d=>{
+    const pct = Math.max(4, Math.round((d.value/maxVal)*100));
+    const valStr = d.value>0 ? (d.value>=1000?'R$'+(d.value/1000).toFixed(1)+'k':'R$'+d.value.toFixed(0)) : '';
+    return `<div class="bar-wrap">
+      <div class="bar-value">${valStr}</div>
+      <div class="bar" style="height:${pct}%;background:${d.isToday?'var(--black)':'var(--gold)'};"></div>
+      <div class="bar-label" style="font-weight:${d.isToday?'900':'400'}">${d.label}</div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+// ==================== FEATURE 6: RIDER RANKING ====================
+function buildRiderRanking() {
+  const riders = DB.get('riders',[]).filter(r=>r.status==='active');
+  if (riders.length===0) return '<div style="font-size:13px;color:var(--text2);padding:8px 0;">Nenhum entregador ativo</div>';
+  const medals = ['🥇','🥈','🥉','4️⃣','5️⃣'];
+  const scored = riders.map(r=>{
+    const totalPaid = (r.payments||[]).reduce((s,p)=>s+p.amount,0);
+    const months = Math.max(1, Math.round((Date.now()-new Date(r.startDate||r.createdAt))/(30*24*60*60*1000)));
+    const isVip = (r.payments||[]).length >= 3;
+    return {...r, totalPaid, months, isVip};
+  }).sort((a,b)=>b.totalPaid-a.totalPaid).slice(0,5);
+  return scored.map((r,i)=>`
+    <div class="list-item">
+      <div style="font-size:24px;width:32px;text-align:center;">${medals[i]||'·'}</div>
+      <div class="list-info">
+        <div class="list-name">${r.name} ${r.isVip?'<span class="badge badge-gold">⭐ VIP</span>':''}</div>
+        <div class="list-sub">${r.vehicleType==='moto'?'🏍️':'🚲'} ${r.plan.name} • ${r.months} ${r.months===1?'mês':'meses'}</div>
+      </div>
+      <div class="list-right"><div class="list-value" style="color:var(--green);">R$ ${r.totalPaid.toLocaleString('pt-BR')}</div><div style="font-size:11px;color:var(--text2);">total pago</div></div>
+    </div>`).join('');
+}
+
+// ==================== FEATURE 7: EXPORT ====================
+function copyFinancialSummary() {
+  const now = new Date();
+  const mesStr = now.getFullYear()+'-'+(now.getMonth()+1);
+  const tourismRentals = DB.get('tourism_rentals',[]);
+  const riders = DB.get('riders',[]);
+  const expenses = DB.get('expenses',[]);
+  const mesFilter = d=>(d.getFullYear()+'-'+(d.getMonth()+1))===mesStr;
+  const tRev = tourismRentals.filter(r=>r.status==='completed'&&mesFilter(new Date(r.endTime))).reduce((s,r)=>s+(r.totalCharged||0),0);
+  const rRev = riders.reduce((s,r)=>(s+(r.payments||[]).filter(p=>mesFilter(new Date(p.date))).reduce((a,p)=>a+p.amount,0)),0);
+  const exp = expenses.filter(e=>mesFilter(new Date(e.date))).reduce((s,e)=>s+(e.value||0),0);
+  const result = tRev+rRev-exp;
+  const month = now.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  const text = `📊 RESUMO VEELO WAY — ${month.toUpperCase()}\n\n🌊 Receita Turismo: R$ ${tRev.toFixed(2)}\n📦 Receita Entregadores: R$ ${rRev.toFixed(2)}\n💰 TOTAL RECEITAS: R$ ${(tRev+rRev).toFixed(2)}\n\n📉 Total Despesas: R$ ${exp.toFixed(2)}\n\n${result>=0?'✅':'🔴'} RESULTADO: R$ ${result.toFixed(2)}\n\nEntregadores ativos: ${riders.filter(r=>r.status==='active').length}\nGerado em: ${now.toLocaleString('pt-BR')}`;
+  navigator.clipboard.writeText(text).then(()=>toast('📋 Resumo copiado!')).catch(()=>alert(text));
+}
+
+function exportRidersCSV() {
+  const riders = DB.get('riders',[]);
+  const headers = ['Nome','CPF','Telefone','Veículo','Plano','Valor','Início','Status','Total Pago','Última Vistoria'];
+  const rows = riders.map(r=>[
+    r.name, r.cpf, r.tel1||'',
+    r.vehicleType==='moto'?'Moto Elétrica':'Bicicleta Elétrica',
+    r.plan?.name||'', r.plan?.price||'',
+    r.startDate||'', r.status,
+    (r.payments||[]).reduce((s,p)=>s+p.amount,0),
+    r.lastInspection?new Date(r.lastInspection).toLocaleDateString('pt-BR'):''
+  ]);
+  downloadCSV([headers,...rows], 'veelo_entregadores.csv');
+  toast('📤 CSV baixado!');
+}
+
+function exportFinancialCSV() {
+  const tourismRentals = DB.get('tourism_rentals',[]);
+  const riders = DB.get('riders',[]);
+  const expenses = DB.get('expenses',[]);
+  const headers = ['Data','Tipo','Descrição','Valor','Pagamento'];
+  const rows = [];
+  tourismRentals.filter(r=>r.status==='completed').forEach(r=>{
+    rows.push([new Date(r.endTime).toLocaleDateString('pt-BR'),'Turismo',`${r.customer} — ${r.plan?.name}`,r.totalCharged||0,r.payment]);
+  });
+  riders.forEach(r=>{
+    (r.payments||[]).forEach(p=>{
+      rows.push([new Date(p.date).toLocaleDateString('pt-BR'),'Entregador',`${r.name} — ${r.plan?.name}`,p.amount,'']);
+    });
+  });
+  expenses.forEach(e=>{
+    rows.push([new Date(e.date).toLocaleDateString('pt-BR'),'Despesa',e.description||e.category,-e.value,e.payment]);
+  });
+  rows.sort((a,b)=>new Date(b[0].split('/').reverse().join('-'))-new Date(a[0].split('/').reverse().join('-')));
+  downloadCSV([headers,...rows], 'veelo_financeiro.csv');
+  toast('📤 CSV baixado!');
+}
+
+function downloadCSV(rows, filename) {
+  const csv = rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download=filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ==================== FEATURE 8: CONTRACT PER RIDER ====================
+function generateRiderContract(rider) {
+  const vEmoji = rider.vehicleType==='moto'?'🏍️':'🚲';
+  const vName = rider.vehicleType==='moto'?'Moto Elétrica':'Bicicleta Elétrica';
+  const contract = rider.contract || {};
+  const isDigital = contract.signedMode === 'digital';
+  const signedAt = contract.signedAt;
+  const signedBadge = signedAt
+    ? `<span class="badge badge-green">✅ ${isDigital?'Assinado Digitalmente':'Assinado'} em ${new Date(signedAt).toLocaleString('pt-BR')}</span>`
+    : `<span class="badge badge-orange">⏳ Aguardando assinatura</span>`;
+  const digitalNote = (isDigital && contract.termsAccepted)
+    ? `<div style="background:#d5f5e3;border:1.5px solid #27ae60;border-radius:8px;padding:10px;font-size:12px;margin-bottom:12px;">
+        ✅ <b>Contrato aceito digitalmente</b><br>
+        Data/Hora: ${new Date(contract.termsAccepted.acceptedAt||signedAt).toLocaleString('pt-BR')}<br>
+        Termos: Contrato ✅ | Informações verdadeiras ✅ | Ciente de vistoria e bloqueio ✅<br>
+        Protocolo: ${contract.id||rider.id}
+       </div>`
+    : '';
+  return `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+      <div class="modal-title" style="margin:0;">📄 Contrato — ${rider.name}</div>
+      ${signedBadge}
+    </div>
+    ${digitalNote}
+    ${!signedAt ? `<button class="btn btn-green btn-sm" style="margin-bottom:12px;width:auto;" onclick="markContractSigned('${rider.id}')">✅ Marcar como Assinado</button>` : ''}
+    <button class="btn btn-outline btn-sm" style="margin-bottom:12px;margin-left:8px;width:auto;" onclick="printRiderContractContent('${rider.id}')">🖨️ Imprimir</button>
+    <div id="rider-contract-print-${rider.id}" class="contract-body">
+      <h2>Contrato de Locação — Entregadores</h2>
+      <p style="text-align:center;font-size:9pt;color:#555;">Veelo Way • JJ Mobilidade e Serviços Ltda • CNPJ 57.808.810/0001-96 • Cabo Frio/RJ</p>
+      ${isDigital ? `<p style="text-align:center;font-size:9pt;color:#1a8a46;font-weight:bold;">✅ ACEITO DIGITALMENTE EM ${new Date(signedAt).toLocaleString('pt-BR')}</p>` : ''}
+      <hr style="margin:8px 0;">
+      <h3>1. Identificação do Locatário</h3>
+      <p><b>Nome:</b> ${rider.name}</p>
+      <p><b>CPF:</b> ${rider.cpf} &nbsp;&nbsp; <b>RG:</b> ${rider.rg||'___________'}</p>
+      <p><b>Telefone:</b> ${rider.tel1||'___________'} &nbsp;&nbsp; <b>Tel 2:</b> ${rider.tel2||'___________'}</p>
+      <p><b>Endereço:</b> ${rider.address||'___________________________________________'}</p>
+      <p><b>Ref 1:</b> ${rider.ref1||'___________________'} &nbsp;&nbsp; <b>Ref 2:</b> ${rider.ref2||'___________________'}</p>
+      <p><b>App(s):</b> ${(rider.apps||[]).join(', ')||'___________'}</p>
+      <h3>2. Veículo e Plano Contratado</h3>
+      <p><b>Veículo:</b> ${vEmoji} ${vName} &nbsp;&nbsp; <b>ID:</b> ${rider.vehicleId||'___________'}</p>
+      <p><b>Plano:</b> ${rider.plan?.name} &nbsp;&nbsp; <b>Valor:</b> R$ ${rider.plan?.price},00/${rider.plan?.period} &nbsp;&nbsp; <b>Vence todo dia:</b> ${rider.dueDay||'___'}</p>
+      <p><b>Início:</b> ${rider.startDate ? new Date(rider.startDate+'T12:00').toLocaleDateString('pt-BR') : '___/___/______'} &nbsp;&nbsp; <b>Caução:</b> ${rider.caucao==='sim'?'✅ R$ '+(rider.vehicleType==='moto'?'300,00':'200,00')+' recebido':'⏳ Pendente'}</p>
+      <h3>3. Manutenção e Vistoria Semanal</h3>
+      <p>A Veelo Way é responsável por toda manutenção. Vistoria semanal obrigatória. Não comparecimento = bloqueio remoto. Proibido realizar reparos sem autorização.</p>
+      <h3>4. Responsabilidade por Danos e Furto</h3>
+      <p>Locatário responde por danos por mau uso. Furto com BO em 24h: 50% do valor. Sem BO: 100%. Rastreador GPS com bloqueio remoto. Inadimplência +3 dias = bloqueio automático. Multa: 2%/dia.</p>
+      <h3>5. Proibições</h3>
+      <p>✗ Ceder/sublocar &nbsp; ✗ Álcool/drogas &nbsp; ✗ Calçadas/rodovias &nbsp; ✗ Passageiros &nbsp; ✗ Remover rastreador &nbsp; ✗ Uso fora de entregas</p>
+      <h3>6. Rescisão e Foro</h3>
+      <p>Aviso prévio de 7 dias. Rescisão antecipada: multa de 1 parcela. Foro: Comarca de Cabo Frio/RJ.</p>
+      ${isDigital
+        ? `<h3>7. Assinatura Digital</h3>
+           <p>Aceito digitalmente via link oficial Veelo Way.</p>
+           <p><b>Data/Hora:</b> ${new Date(signedAt).toLocaleString('pt-BR')} &nbsp; <b>Protocolo:</b> ${contract.id||rider.id}</p>`
+        : `<p style="margin-top:12px;"><b>Local:</b> Cabo Frio/RJ &nbsp;&nbsp; <b>Data:</b> ${rider.startDate ? new Date(rider.startDate+'T12:00').toLocaleDateString('pt-BR') : '___/___/______'}</p>
+           <div class="sign-row">
+             <div class="sign-block">${rider.name}<br><small>CPF: ${rider.cpf}</small></div>
+             <div class="sign-block">Veelo Way — Responsável<br><small>_________________</small></div>
+           </div>`}
+    </div>`;
+}
+
+function deleteRider(id) {
+  if (!confirm('⚠️ Excluir este entregador permanentemente?\n\nEsta ação não pode ser desfeita.')) return;
+  const riders = DB.get('riders', []).filter(r => r.id !== id);
+  DB.set('riders', riders);
+  closeModal('modal-rider-detail');
+  refreshRiders();
+  updateNotificationBadge();
+  toast('🗑️ Entregador excluído');
+}
+
+function deleteTourismRental(id) {
+  if (!confirm('Excluir esta locação do histórico?')) return;
+  const rentals = DB.get('tourism_rentals', []).filter(r => r.id !== id);
+  DB.set('tourism_rentals', rentals);
+  refreshTurismo();
+  toast('🗑️ Locação excluída do histórico');
+}
+
+function markContractSigned(id) {
+  const riders = DB.get('riders',[]);
+  const idx = riders.findIndex(r=>r.id===id);
+  if (idx<0) return;
+  if (!riders[idx].contract) riders[idx].contract = {};
+  riders[idx].contract.signedAt = new Date().toISOString();
+  DB.set('riders', riders);
+  toast('✅ Contrato marcado como assinado!');
+  openRiderDetail(id);
+}
+
+function printRiderContractContent(id) {
+  const el = document.getElementById('rider-contract-print-'+id);
+  if (!el) return;
+  const w = window.open('','_blank');
+  w.document.write('<html><head><title>Contrato Veelo Way</title><style>body{font-family:Arial,sans-serif;font-size:10pt;color:#111;padding:20px;} h2{text-align:center;text-transform:uppercase;} h3{background:#111;color:#fff;padding:3px 6px;margin:10px 0 6px;} .sign-row{display:flex;gap:20px;margin-top:20px;} .sign-block{flex:1;text-align:center;border-top:1px solid #333;padding-top:4px;font-size:9pt;}</style></head><body>'+el.innerHTML+'</body></html>');
+  w.document.close(); w.print();
+}
+
+// ==================== FEATURE 9: CLIENT DATABASE ====================
+function refreshClients(searchTerm='') {
+  const tourismRentals = DB.get('tourism_rentals',[]);
+  const riders = DB.get('riders',[]);
+  const clientMap = {};
+
+  // Add tourism clients
+  tourismRentals.forEach(r=>{
+    const key = r.cpf||r.customer;
+    if (!clientMap[key]) clientMap[key] = { name:r.customer, cpf:r.cpf||'', phone:r.phone||'', type:'turismo', rentals:[], totalSpent:0, lastDate:null };
+    if (r.status==='completed') {
+      clientMap[key].rentals.push(r);
+      clientMap[key].totalSpent += r.totalCharged||0;
+      const d = new Date(r.endTime);
+      if (!clientMap[key].lastDate || d > new Date(clientMap[key].lastDate)) clientMap[key].lastDate = r.endTime;
+    }
+  });
+
+  // Add rider clients (override if same CPF)
+  riders.forEach(r=>{
+    const key = r.cpf||r.name;
+    const totalPaid = (r.payments||[]).reduce((s,p)=>s+p.amount,0);
+    clientMap[key] = {
+      name:r.name, cpf:r.cpf, phone:r.tel1||'', type:'entregador',
+      rider: r, totalSpent: totalPaid,
+      lastDate: r.payments?.length ? r.payments[r.payments.length-1].date : r.createdAt,
+      contractSigned: !!r.contract?.signedAt
+    };
+  });
+
+  let clients = Object.values(clientMap);
+  if (searchTerm) {
+    const q = searchTerm.toLowerCase();
+    clients = clients.filter(c=>c.name.toLowerCase().includes(q)||(c.cpf||'').includes(q));
+  }
+  clients.sort((a,b)=>new Date(b.lastDate||0)-new Date(a.lastDate||0));
+
+  const el = document.getElementById('clients-list');
+  if (!el) return;
+  if (clients.length===0) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">👥</div><div class="empty-text">Nenhum cliente encontrado</div></div>';
+    return;
+  }
+  el.innerHTML = clients.map(c=>{
+    const initials = c.name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+    const maskedCpf = c.cpf ? c.cpf.replace(/(\d{3})\.(\d{3})\.(\d{3})-(\d{2})/,'***.***.***-$4') : '—';
+    const typeBadge = c.type==='entregador' ? '<span class="badge badge-blue">📦 Entregador</span>' : '<span class="badge badge-green">🌊 Turismo</span>';
+    const contractBadge = c.type==='entregador' ? (c.contractSigned?'<span class="badge badge-green">✅ Assinado</span>':'<span class="badge badge-orange">⏳ Pendente</span>') : '';
+    const lastDate = c.lastDate ? new Date(c.lastDate).toLocaleDateString('pt-BR') : '—';
+    return `<div class="list-item" onclick="openClientDetail(${JSON.stringify(c.cpf||c.name).replace(/'/g,'&apos;')})">
+      <div class="list-avatar" style="font-size:15px;font-weight:900;color:var(--gold);">${initials}</div>
+      <div class="list-info">
+        <div class="list-name">${c.name}</div>
+        <div class="list-sub">${maskedCpf} • ${c.phone||'sem tel'}</div>
+        <div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap;">${typeBadge}${contractBadge}</div>
+      </div>
+      <div class="list-right">
+        <div class="list-value" style="color:var(--green);">R$ ${c.totalSpent.toLocaleString('pt-BR',{minimumFractionDigits:0})}</div>
+        <div class="list-date">${lastDate}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openClientDetail(cpfOrName) {
+  const riders = DB.get('riders',[]);
+  const tourismRentals = DB.get('tourism_rentals',[]);
+  const rider = riders.find(r=>r.cpf===cpfOrName||r.name===cpfOrName);
+  if (rider) {
+    closeModal('modal-clients');
+    openRiderDetail(rider.id);
+    return;
+  }
+  // Tourism client
+  const rentals = tourismRentals.filter(r=>r.cpf===cpfOrName||r.customer===cpfOrName);
+  const client = rentals[0];
+  if (!client) return;
+  const total = rentals.filter(r=>r.status==='completed').reduce((s,r)=>s+(r.totalCharged||0),0);
+  document.getElementById('client-detail-content').innerHTML = `
+    <div style="font-size:22px;font-weight:900;margin-bottom:4px;">${client.customer}</div>
+    <div style="margin-bottom:12px;"><span class="badge badge-green">🌊 Turismo</span></div>
+    <div class="card" style="background:var(--gray);box-shadow:none;">
+      <div class="insp-row"><span>CPF</span><span>${client.cpf||'—'}</span></div>
+      <div class="insp-row"><span>Telefone</span><span>${client.phone||'—'}</span></div>
+      <div class="insp-row"><span>Total gasto</span><span style="font-weight:900;color:var(--green);">R$ ${total.toFixed(2)}</span></div>
+      <div class="insp-row"><span>Locações</span><span>${rentals.length}</span></div>
+    </div>
+    ${client.phone ? `<a href="https://wa.me/55${client.phone.replace(/\D/g,'')}" target="_blank" class="btn btn-green" style="text-decoration:none;margin-bottom:10px;">📲 WhatsApp</a>` : ''}
+    <div class="card-title" style="margin-top:8px;">Histórico de Locações</div>
+    ${rentals.slice(0,10).map(r=>`<div class="insp-row"><span>${new Date(r.startTime).toLocaleDateString('pt-BR')} — ${r.plan?.name}</span><span>R$ ${(r.totalCharged||r.plan?.price||0).toFixed(2)}</span></div>`).join('')}
+  `;
+  openModal('modal-client-detail');
+}
+
+// ==================== PATCH EXISTING FUNCTIONS ====================
+
+// Patch openRiderDetail to add WhatsApp + photo inspection + contract
+const _origOpenRiderDetail = openRiderDetail;
+openRiderDetail = function(id) {
+  const riders = DB.get('riders', []);
+  const r = riders.find(x => x.id === id);
+  if (!r) return;
+  const now = new Date();
+  const overdue = new Date(r.nextPaymentDate) < now;
+  const noInsp = !r.lastInspection || (now - new Date(r.lastInspection)) / 86400000 > 7;
+  const vEmoji = r.vehicleType === 'moto' ? '🏍️' : '🚲';
+  const statusBadge = r.status !== 'active' ? '<span class="badge badge-gray">Inativo</span>' :
+    overdue ? '<span class="badge badge-red">Inadimplente</span>' :
+    '<span class="badge badge-green">Ativo</span>';
+  const contractBadge = r.contract?.signedAt
+    ? `<span class="badge badge-green" style="margin-left:6px;">✅ Contrato Assinado</span>`
+    : `<span class="badge badge-orange" style="margin-left:6px;">⏳ Contrato Pendente</span>`;
+
+  // Last inspection photo
+  const lastInspPhoto = r.inspections?.[0]?.photo
+    ? `<img src="${r.inspections[0].photo}" style="width:100%;max-height:120px;object-fit:cover;border-radius:8px;margin-top:6px;">`
+    : '';
+
+  // Inspection history
+  const inspHistory = (r.inspections||[]).slice(0,5).map(insp=>`
+    <div class="insp-row">
+      <span>${new Date(insp.date).toLocaleDateString('pt-BR')}</span>
+      <span>${insp.notes||'Sem observações'}</span>
+      ${insp.photo?`<img src="${insp.photo}" style="width:40px;height:40px;object-fit:cover;border-radius:6px;">` : ''}
+    </div>`).join('');
+
+  document.getElementById('rider-detail-content').innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+      <div style="font-size:40px;">${vEmoji}</div>
+      <div><div style="font-size:18px;font-weight:900;">${r.name}</div><div style="margin-top:4px;">${statusBadge}${contractBadge}</div></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+      ${r.tel1 ? `<a href="https://wa.me/55${r.tel1.replace(/\D/g,'')}" target="_blank" class="btn btn-green btn-sm" style="text-decoration:none;width:auto;">📲 WhatsApp</a>` : ''}
+      <button class="btn btn-sm btn-outline" style="width:auto;" onclick="sendWhatsApp('${r.id}','${overdue?'atrasado':'vencendo'}')">📨 ${overdue?'Cobrança':'Lembrete'}</button>
+      <button class="btn btn-sm btn-black" style="width:auto;" onclick="openRiderContractModal('${r.id}')">📄 Contrato</button>
+    </div>
+    <div class="card" style="background:var(--gray);box-shadow:none;">
+      <div class="insp-row"><span style="color:var(--text2);font-size:12px;">CPF</span><span><b>${r.cpf}</b></span></div>
+      <div class="insp-row"><span style="color:var(--text2);font-size:12px;">Tel 1</span><span>${r.tel1||'—'}</span></div>
+      <div class="insp-row"><span style="color:var(--text2);font-size:12px;">Tel 2</span><span>${r.tel2||'—'}</span></div>
+      <div class="insp-row"><span style="color:var(--text2);font-size:12px;">Endereço</span><span>${r.address||'—'}</span></div>
+      <div class="insp-row"><span style="color:var(--text2);font-size:12px;">Apps</span><span>${r.apps?.join(', ')||'—'}</span></div>
+      <div class="insp-row"><span style="color:var(--text2);font-size:12px;">Veículo</span><span>${vEmoji} ${r.vehicleId}</span></div>
+      <div class="insp-row"><span style="color:var(--text2);font-size:12px;">Plano</span><span>${r.plan.name} — R$ ${r.plan.price}/${r.plan.period}</span></div>
+      <div class="insp-row"><span style="color:var(--text2);font-size:12px;">Caução</span><span>${r.caucao==='sim'?'✅ Recebido':'❌ Não cobrado'}</span></div>
+      ${r.selfiePhoto ? `<div style="margin-top:8px;"><div style="font-size:11px;color:var(--text2);margin-bottom:4px;">📸 SELFIE COM DOCUMENTO</div><img src="${r.selfiePhoto}" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;border:2px solid var(--green);"></div>` : ''}
+    </div>
+    <div class="card" style="${overdue?'border:2px solid var(--red);':''}">
+      <div class="card-title">💰 Pagamentos</div>
+      <div class="insp-row"><span>Próximo vencimento</span><span><b>${new Date(r.nextPaymentDate).toLocaleDateString('pt-BR')}</b></span></div>
+      <div class="insp-row"><span>Total pago</span><span style="color:var(--green);font-weight:900;">R$ ${(r.payments||[]).reduce((s,p)=>s+p.amount,0).toLocaleString('pt-BR')}</span></div>
+      ${overdue?'<div class="alert" style="background:#fde8e8;border-color:var(--red);">🔴 Pagamento em atraso!</div>':''}
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+        <button class="btn btn-green btn-sm" onclick="registerPayment('${r.id}')">✅ Registrar Pagamento</button>
+        <button class="btn btn-red btn-sm" onclick="suspendRider('${r.id}')">${r.status==='active'?'🚫 Suspender':'✅ Reativar'}</button>
+      </div>
+    </div>
+    <div class="card" style="${noInsp?'border:2px solid var(--orange);':''}">
+      <div class="card-title">🔧 Vistoria Semanal</div>
+      <div class="insp-row"><span>Última vistoria</span><span><b>${r.lastInspection?new Date(r.lastInspection).toLocaleDateString('pt-BR'):'Nunca'}</b></span></div>
+      ${lastInspPhoto}
+      ${noInsp?'<div class="alert">⚠️ Vistoria em atraso!</div>':''}
+      <button class="btn btn-black btn-sm" style="margin-top:10px;width:auto;" onclick="registerInspectionWithPhoto('${r.id}')">📷 Registrar Vistoria</button>
+      ${inspHistory ? `<div style="margin-top:10px;"><div class="card-title">Histórico</div>${inspHistory}</div>` : ''}
+    </div>
+    ${r.notes?`<div class="card"><div class="card-title">📝 Observações</div><p style="font-size:13px;">${r.notes}</p></div>`:''}
+  `;
+  openModal('modal-rider-detail');
+};
+
+function openRiderContractModal(id) {
+  const riders = DB.get('riders',[]);
+  const r = riders.find(x=>x.id===id);
+  if (!r) return;
+  document.getElementById('rider-contract-content').innerHTML = generateRiderContract(r);
+  openModal('modal-rider-contract');
+}
+
+// Patch saveRider to generate contract
+const _origSaveRider = saveRider;
+saveRider = function() {
+  // Call original
+  _origSaveRider();
+  // Contract gets generated on next tick after save
+  setTimeout(()=>{
+    const riders = DB.get('riders',[]);
+    const r = riders[riders.length-1];
+    if (r && !r.contract) {
+      r.contract = {
+        generatedAt: new Date().toISOString(),
+        type: 'entregador',
+        vehicleType: r.vehicleType,
+        vehicleId: r.vehicleId,
+        plan: r.plan,
+        caucao: r.caucao,
+        startDate: r.startDate,
+        signedAt: null
+      };
+      riders[riders.length-1] = r;
+      DB.set('riders', riders);
+    }
+  }, 100);
+};
+
+// Patch refreshRelatorios to add chart + ranking + export
+const _origRefreshRelatorios = refreshRelatorios;
+refreshRelatorios = function() {
+  _origRefreshRelatorios();
+  // Inject chart before first card
+  const relScreen = document.getElementById('screen-relatorios');
+  if (!relScreen) return;
+  let chartCard = document.getElementById('rel-chart-card');
+  if (!chartCard) {
+    chartCard = document.createElement('div');
+    chartCard.id = 'rel-chart-card';
+    chartCard.className = 'card';
+    relScreen.insertBefore(chartCard, relScreen.firstChild);
+  }
+  chartCard.innerHTML = `<div class="card-title">📈 Receita — Últimos 7 Dias</div>${build7DayChart()}`;
+
+  // Ranking
+  let rankCard = document.getElementById('rel-rank-card');
+  if (!rankCard) {
+    rankCard = document.createElement('div');
+    rankCard.id = 'rel-rank-card';
+    rankCard.className = 'card';
+    relScreen.appendChild(rankCard);
+  }
+  rankCard.innerHTML = `<div class="card-title">🏆 Ranking de Entregadores</div>${buildRiderRanking()}`;
+
+  // Export
+  let expCard = document.getElementById('rel-export-card');
+  if (!expCard) {
+    expCard = document.createElement('div');
+    expCard.id = 'rel-export-card';
+    expCard.className = 'card';
+    relScreen.appendChild(expCard);
+  }
+  expCard.innerHTML = `
+    <div class="card-title">📤 Exportar Dados</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <button class="btn btn-outline" onclick="copyFinancialSummary()">📋 Copiar Resumo Financeiro</button>
+      <button class="btn btn-outline" onclick="exportRidersCSV()">📤 Exportar Entregadores (CSV)</button>
+      <button class="btn btn-outline" onclick="exportFinancialCSV()">📊 Exportar Histórico Financeiro (CSV)</button>
+    </div>`;
+};
+
+// Patch showScreen to handle clientes
+const _origShowScreen2 = showScreen;
+showScreen = function(name) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const scr = document.getElementById('screen-'+name);
+  if (scr) { scr.classList.add('active'); scr.style.display=''; }
+  const nav = document.getElementById('nav-'+name);
+  if (nav) nav.classList.add('active');
+  if (name==='caixa') refreshCaixa();
+  else if (name==='home') { refreshHome(); updateNotificationBadge(); }
+  else if (name==='turismo') refreshTurismo();
+  else if (name==='entregadores') { refreshRiders(); updateNotificationBadge(); }
+  else if (name==='frota') refreshFleet();
+  else if (name==='relatorios') refreshRelatorios();
+  else if (name==='clientes') refreshClients();
+};
+
+// ==================== PENDING REGISTRATIONS ====================
+function checkPendingRegistrations() {
+  fetch('/api/registrations')
+    .then(r=>r.json())
+    .then(all=>{
+      const pending = all.filter(r=>r.status==='pending');
+      const badge = document.getElementById('pending-badge');
+      if (pending.length > 0) {
+        if (badge) { badge.textContent = pending.length; badge.style.display = 'flex'; }
+      } else {
+        if (badge) badge.style.display = 'none';
+      }
+    }).catch(()=>{});
+}
+
+function getPendingRegistrations() {
+  return fetch('/api/registrations')
+    .then(r=>r.json())
+    .then(all=>all.filter(r=>r.status==='pending'));
+}
+
+function openPendingModal() {
+  const list = document.getElementById('pending-list');
+  list.innerHTML = '<div style="text-align:center;padding:20px;color:#666;">⏳ Carregando...</div>';
+  openModal('modal-pending');
+  getPendingRegistrations().then(pending=>{
+  const list = document.getElementById('pending-list');
+  if (pending.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:20px;color:#666;">✅ Nenhum cadastro pendente</div>';
+  } else {
+    list.innerHTML = pending.map(r=>{
+      const typeBadge = r.type==='turismo'
+        ? '<span style="background:#d5f5e3;color:#1a8a46;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;">🌊 Turismo</span>'
+        : '<span style="background:#e0f0fb;color:#1a6fa0;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;">📦 Entregador</span>';
+      const dt = new Date(r.submittedAt).toLocaleString('pt-BR');
+      return `<div style="border:1.5px solid #e0e0e0;border-radius:10px;padding:14px;margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div style="font-weight:900;font-size:15px;">${r.name}</div>
+          ${typeBadge}
+        </div>
+        <div style="font-size:12px;color:#666;margin-bottom:4px;">CPF: ${r.cpf} • ${r.tel1||r.phone||'—'}</div>
+        ${r.selfiePhoto ? `<img src="${r.selfiePhoto}" style="width:100%;max-height:160px;object-fit:cover;border-radius:8px;margin-bottom:8px;border:2px solid #27ae60;">` : '<div style="font-size:11px;color:#e74c3c;margin-bottom:6px;">⚠️ Sem selfie anexada</div>'}
+        <div style="font-size:12px;color:#666;margin-bottom:10px;">${r.plan?.name} — R$ ${r.plan?.price?.toLocaleString('pt-BR')}/${r.plan?.period||'uso'} • ${dt}</div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="approvePending('${r.id}')" style="flex:1;padding:10px;background:#27ae60;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;">✅ Aprovar</button>
+          <button onclick="rejectPending('${r.id}')" style="flex:1;padding:10px;background:#e74c3c;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;">❌ Recusar</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  }); // end getPendingRegistrations
+}
+
+function approvePending(id) {
+  fetch('/api/approve?id=' + id)
+    .then(r=>r.json())
+    .then(()=>{
+      // Load full registration data to process
+      fetch('/api/registrations')
+        .then(r=>r.json())
+        .then(all=>{
+          const r = all.find(x=>x.id===id);
+          if (!r) return;
+          _processPendingApproval(r);
+        });
+    });
+}
+
+function _processPendingApproval(r) {
+  const now = new Date();
+
+  if (r.type === 'turismo') {
+    // Save tourism client to base
+    const clients = DB.get('tourism_clients',[]);
+    const existing = clients.findIndex(c=>c.cpf===r.cpf);
+    const clientData = {
+      id: r.id,
+      name: r.name,
+      cpf: r.cpf,
+      phone: r.tel1||r.phone||'',
+      dob: r.dob||'',
+      registeredAt: r.submittedAt,
+      approvedAt: now.toISOString(),
+      type: 'turismo',
+      preSelectedVehicle: r.vehicleType,
+      preSelectedPlan: r.plan,
+      payment: r.payment,
+      termsAcceptedAt: r.submittedAt,
+      contract: {
+        type: 'turismo',
+        generatedAt: r.submittedAt,
+        signedAt: r.submittedAt, // accepted online
+        signedMode: 'digital',
+        plan: r.plan,
+        vehicleType: r.vehicleType,
+        payment: r.payment,
+        caucaoRequired: r.vehicleType === 'moto' ? 300 : 200,
+      },
+      notes: '📲 Cadastro via link de turismo'
+    };
+    if (existing >= 0) clients[existing] = {...clients[existing], ...clientData};
+    else clients.push(clientData);
+    DB.set('tourism_clients', clients);
+    toast('✅ Turista aprovado e salvo na base! Inicie a locação normalmente.');
+
+  } else {
+    // Save rider with full contract
+    const riders = DB.get('riders',[]);
+
+    // Check if already exists by CPF
+    const existingIdx = riders.findIndex(x=>x.cpf===r.cpf);
+    if (existingIdx>=0) {
+      toast('⚠️ CPF já cadastrado: ' + riders[existingIdx].name);
+      return;
+    }
+
+    const dueDay = 5;
+    const nextPayment = new Date();
+    nextPayment.setDate(dueDay);
+    if (nextPayment <= now) nextPayment.setMonth(nextPayment.getMonth()+1);
+
+    // Full contract snapshot with all submission data
+    const contract = {
+      id: 'CONT-' + r.id,
+      type: 'entregador',
+      generatedAt: r.submittedAt,
+      signedAt: r.termsAcceptedAt || r.submittedAt,
+      signedMode: 'digital', // client signed via link
+      approvedAt: now.toISOString(),
+      // Dados do cliente no momento da assinatura
+      clientSnapshot: {
+        name: r.name, cpf: r.cpf, rg: r.rg||'',
+        tel1: r.tel1||'', tel2: r.tel2||'',
+        address: r.address||'', ref1: r.ref1||'', ref2: r.ref2||'',
+        apps: r.apps||[], dob: r.dob||''
+      },
+      // Dados da locação
+      vehicleType: r.vehicleType,
+      vehicleId: '', // atribuído depois
+      plan: r.plan,
+      caucaoRequired: r.vehicleType === 'moto' ? 300 : 200,
+      caucaoPaid: false,
+      startDate: new Date().toISOString().split('T')[0],
+      // Termos aceitos
+      termsAccepted: {
+        terms1: true, // leu e aceitou o contrato
+        terms2: true, // informações verdadeiras
+        terms3: true, // ciente de vistoria e bloqueio
+        acceptedAt: r.termsAcceptedAt || r.submittedAt,
+        ipInfo: 'via link Veelo Way'
+      }
+    };
+
+    const rider = {
+      id: 'R'+Date.now(),
+      name: r.name, cpf: r.cpf, rg: r.rg||'',
+      tel1: r.tel1||'', tel2: r.tel2||'',
+      address: r.address||'', ref1: r.ref1||'', ref2: r.ref2||'',
+      apps: r.apps||[], vehicleType: r.vehicleType, vehicleId: '',
+      plan: r.plan,
+      startDate: new Date().toISOString().split('T')[0],
+      dueDay,
+      nextPaymentDate: nextPayment.toISOString(),
+      caucao: 'pendente',
+      selfiePhoto: r.selfiePhoto || null,
+      notes: `📲 Cadastro via link — aceito digitalmente em ${new Date(r.termsAcceptedAt||r.submittedAt).toLocaleString('pt-BR')} — aguardando atribuição de veículo`,
+      status: 'active',
+      lastInspection: null,
+      payments: [],
+      createdAt: now.toISOString(),
+      contract: contract
+    };
+
+    riders.push(rider);
+    DB.set('riders', riders);
+    toast('✅ Entregador aprovado! Contrato digital salvo. Atribua um veículo.');
+    refreshRiders();
+    updateNotificationBadge();
+  }
+
+  checkPendingRegistrations();
+  openPendingModal();
+  refreshHome();
+}
+
+function rejectPending(id) {
+  if (!confirm('Recusar este cadastro?')) return;
+  fetch('/api/reject?id=' + id)
+    .then(()=>{
+      toast('❌ Cadastro recusado');
+      checkPendingRegistrations();
+      openPendingModal();
+    });
+}
+
+// Listen for new registrations via BroadcastChannel
+try {
+  const bc = new BroadcastChannel('veelo_way');
+  bc.onmessage = e => {
+    if (e.data?.type === 'new_registration') {
+      checkPendingRegistrations();
+      toast('🔔 Novo cadastro recebido: ' + e.data.data.name);
+    }
+  };
+} catch(e) {}
+
+// Check on load
+document.addEventListener('DOMContentLoaded', ()=>{
+  setTimeout(checkPendingRegistrations, 500);
+  setInterval(checkPendingRegistrations, 15000);
+});
+
+function copyLink(page) {
+  const base = window.location.origin + window.location.pathname.replace('index.html','').replace(/\/$/,'');
+  const url = base + '/' + page;
+  navigator.clipboard.writeText(url)
+    .then(()=>toast('📋 Link copiado! Cole no WhatsApp do cliente'))
+    .catch(()=>{
+      prompt('Copie este link:', url);
+    });
+}
+</script>
+
+<!-- RECEIPT MODAL -->
+<div class="modal-overlay" id="modal-receipt">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('modal-receipt')">✕</button>
+    <div id="receipt-content"></div>
+  </div>
+</div>
+
+<!-- INSPECTION MODAL -->
+<div class="modal-overlay" id="modal-inspection">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('modal-inspection')">✕</button>
+    <div class="modal-title">📷 Registrar Vistoria</div>
+    <input type="hidden" id="insp-rider-id">
+    <div class="form-group">
+      <label class="form-label">Foto do Veículo</label>
+      <input type="file" accept="image/*" capture="environment" id="insp-photo" class="form-input" style="padding:8px;">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Observações</label>
+      <textarea class="form-input" id="insp-notes" rows="2" placeholder="Estado do veículo, observações..."></textarea>
+    </div>
+    <button class="btn btn-gold" onclick="saveInspection()">✅ Salvar Vistoria</button>
+  </div>
+</div>
+
+<!-- RIDER CONTRACT MODAL -->
+<div class="modal-overlay" id="modal-rider-contract">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('modal-rider-contract')">✕</button>
+    <div id="rider-contract-content"></div>
+  </div>
+</div>
+
+<!-- CLIENTS MODAL (full screen) -->
+<div class="modal-overlay" id="modal-clients" style="align-items:stretch;">
+  <div class="modal" style="border-radius:0;max-height:100vh;height:100vh;">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('modal-clients')">✕</button>
+    <div class="modal-title">👥 Base de Clientes</div>
+    <input class="form-input" placeholder="🔍 Buscar por nome ou CPF..." oninput="refreshClients(this.value)" style="margin-bottom:12px;">
+    <div id="clients-list"></div>
+  </div>
+</div>
+
+<!-- CLIENT DETAIL MODAL -->
+<div class="modal-overlay" id="modal-client-detail">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('modal-client-detail')">✕</button>
+    <div id="client-detail-content"></div>
+  </div>
+</div>
+
+<!-- PENDING REGISTRATIONS MODAL -->
+<div class="modal-overlay" id="modal-pending">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('modal-pending')">✕</button>
+    <div class="modal-title">📲 Cadastros pelo Link</div>
+    <div id="pending-list"></div>
+  </div>
+</div>
+
+</body>
+</html>
