@@ -199,13 +199,43 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 </head>
 <body>
 
+<!-- LOGIN SCREEN -->
+<div id="login-screen" style="display:none;position:fixed;inset:0;background:#111;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;">
+  <div style="width:100%;max-width:380px;">
+    <div style="text-align:center;margin-bottom:32px;">
+      <div style="font-size:36px;font-weight:900;color:#fff;letter-spacing:2px;">VEELO <span style="color:#F5C518;">WAY</span> ⚡</div>
+      <div style="font-size:12px;color:#888;letter-spacing:3px;text-transform:uppercase;margin-top:6px;">Sistema de Gestão</div>
+    </div>
+    <div id="login-error" style="display:none;background:#e74c3c;color:#fff;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;text-align:center;"></div>
+    <div style="margin-bottom:14px;">
+      <label style="font-size:12px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">Usuário</label>
+      <input id="login-user" type="text" placeholder="Digite seu usuário" autocomplete="username"
+        style="width:100%;padding:14px;background:#222;border:1.5px solid #333;border-radius:10px;font-size:15px;color:#fff;outline:none;"
+        onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div style="margin-bottom:24px;">
+      <label style="font-size:12px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">Senha</label>
+      <input id="login-pass" type="password" placeholder="Digite sua senha" autocomplete="current-password"
+        style="width:100%;padding:14px;background:#222;border:1.5px solid #333;border-radius:10px;font-size:15px;color:#fff;outline:none;"
+        onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button onclick="doLogin()" style="width:100%;padding:15px;background:#F5C518;color:#111;border:none;border-radius:10px;font-size:16px;font-weight:900;cursor:pointer;letter-spacing:0.5px;">
+      🔐 Entrar
+    </button>
+    <div id="login-role-hint" style="text-align:center;margin-top:16px;font-size:11px;color:#555;"></div>
+  </div>
+</div>
+
 <!-- HEADER -->
 <div class="header">
   <div>
     <div class="header-logo">VEELO <span>WAY</span> ⚡</div>
     <div class="header-sub">Mobilidade Elétrica</div>
   </div>
-  <div id="headerDate" style="font-size:12px;color:#aaa;text-align:right;"></div>
+  <div style="text-align:right;">
+    <div id="headerDate" style="font-size:12px;color:#aaa;"></div>
+    <button onclick="doLogout()" style="margin-top:4px;background:none;border:1px solid #444;color:#aaa;border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;">🚪 Sair</button>
+  </div>
 </div>
 
 <!-- BOTTOM NAV -->
@@ -1524,12 +1554,14 @@ function refreshRelatorios() {
 }
 
 // ==================== INIT ====================
-document.addEventListener('DOMContentLoaded', () => {
+function initApp() {
   refreshHome();
   // Update header date
-  const now = new Date();
-  document.getElementById('headerDate').textContent = now.toLocaleDateString('pt-BR', {weekday:'short', day:'2-digit', month:'short'});
-});
+  const d = new Date();
+  document.getElementById('headerDate').textContent = d.toLocaleDateString('pt-BR', {weekday:'short', day:'2-digit', month:'short'});
+  checkPendingRegistrations();
+  setInterval(checkPendingRegistrations, 30000);
+}
 
 // Refresh timers every 30s on home
 setInterval(() => {
@@ -2695,6 +2727,71 @@ function copyLink(page) {
     <div id="pending-list"></div>
   </div>
 </div>
+
+<script>
+// ==================== LOGIN ====================
+const USERS = {
+  admin:   { pass: 'veelo2026', role: 'admin',   label: 'Administrador' },
+  usuario: { pass: 'veelo123',  role: 'usuario',  label: 'Operador' }
+};
+
+function checkLogin() {
+  const s = sessionStorage.getItem('vw_session');
+  if (!s) return false;
+  try { return JSON.parse(s); } catch { return false; }
+}
+
+function doLogin() {
+  const u = document.getElementById('login-user').value.trim().toLowerCase();
+  const p = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-error');
+  if (!USERS[u] || USERS[u].pass !== p) {
+    err.textContent = '❌ Usuário ou senha incorretos';
+    err.style.display = 'block';
+    document.getElementById('login-pass').value = '';
+    return;
+  }
+  const session = { user: u, role: USERS[u].role, label: USERS[u].label, at: Date.now() };
+  sessionStorage.setItem('vw_session', JSON.stringify(session));
+  document.getElementById('login-screen').style.display = 'none';
+  document.body.style.overflow = '';
+  applyRoleRestrictions(session.role);
+  initApp();
+  toast('👋 Bem-vindo, ' + session.label + '!');
+}
+
+function doLogout() {
+  if (!confirm('Sair do sistema?')) return;
+  sessionStorage.removeItem('vw_session');
+  location.reload();
+}
+
+function applyRoleRestrictions(role) {
+  // usuario role: hide caixa and relatorios nav
+  if (role === 'usuario') {
+    document.querySelectorAll('.nav-item').forEach(el => {
+      if (el.textContent.includes('Caixa') || el.textContent.includes('Relatórios')) {
+        el.style.display = 'none';
+      }
+    });
+  }
+}
+
+// Show login on load
+window.addEventListener('DOMContentLoaded', () => {
+  const session = checkLogin();
+  const loginEl = document.getElementById('login-screen');
+  if (!session) {
+    loginEl.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('login-user').focus(), 100);
+  } else {
+    loginEl.style.display = 'none';
+    applyRoleRestrictions(session.role);
+    initApp();
+  }
+});
+</script>
 
 </body>
 </html>
